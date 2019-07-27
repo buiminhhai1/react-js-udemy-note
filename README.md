@@ -1,6 +1,6 @@
 # react-js-udemy-note
 deeper react js to get a job.
-## Session 1 Introduction
+## Section 1 Introduction
 ### 1 What is react?  
 What is React? "A JavaScript Library for buiding User Interfaces" 
   It is about building JavaScript-driven apps. React apps run in the browser. They don't run on the server, they run in the browser and this gives us a great advantage. Things happen instantly since they happen in the user's browser, We don't have to wait for a server response to get a new page or to render something new. "User Interfaces" are basically what the user sees and React is all about using components for building these. If you think about it, you can split up any web page into components
@@ -39,3 +39,6 @@ What is React? "A JavaScript Library for buiding User Interfaces"
   
 ### 8. Course Outline
    1. Getting started -> 2. The Basics -> 3. Debugging -> 4. Styling components -> 5. Components Deep Dive -> 6. HTTP Requests -> 7. Routing -> 8. Validation -> 9. Redux -> 10. Authentication. -> 11. Testing introduction. -> 12. Deployment -> 13. Bonus(Animations, next step webpack)
+
+
+## Section 2: Refresh Next Generation JavaScript 
