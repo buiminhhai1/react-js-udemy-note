@@ -42,3 +42,54 @@ What is React? "A JavaScript Library for buiding User Interfaces"
 
 
 ## Section 2: Refresh Next Generation JavaScript 
+### Export & Import
+  JavaScript code you split up over multiple files. And obviously we already can split our code over multiple files. We just have to import them in the correct order in our html files. And the idea behind export and import statements and so-called modules is that inside of a JavaScript file, we can import content from another file so that the JavaScript files themselves know their dependencies.
+  We export this the default keyword this is a special keyword marking this as the default export of this file and we can import this somewhere else and the import statement will shown in a second. We also might have a number of files where we export miltiple things, here a constant named clean which holds a function at the end and baseData which holds number in a third file. example 
+```python
+// file person.js
+const person = {
+  name: "Hai"
+}
+export default person;
+
+// file utility.js 
+export const clean = () => {...};
+export const baseData = 10;
+
+file app.js
+import person from './person.js';
+import psn from './person.js';
+import {baseData} from './utility.js';
+import {clean} from './utility.js';
+```
+### Understand classes
+```python
+  class Human {
+    gender = 'male';
+    
+    printGender = () => console.log(this.gender);
+  }
+  class Pereson extends Human {
+      name = "Hai"
+    }
+    printMyName = () => console.log(this.name); 
+  }
+  
+  const person = new Person();
+  person.printMyName(); // Hai
+  person.printGender(); // male.
+```
+### Spread & Rest Operators.
+  Let's now turn our heads towards new operators we'll be able to use in the future of JavaScript and we already can use today in our React project, the Spread and the Rest operators. Actually it's only one operator theree dots ... This may look strange but the operator is just three dots. Now if we call it spread o rest depends on where we use it, the spread operatoor is used to split up.
+- Spread: Used to split up array elements OR object properties.
+```python
+const newArray = [...oldArray, 1, 2];
+const newObject = {...oldObject, newProp: 5};
+```
+three dots in front of old array will simply pull out all the elements and add it to the new Array which we created with square brackets. it is the normal syntax the square brackets to create an array, the same for the object. We create a new object with curly braces with the new prop but then we also have ... olb object to pull out all the properties of the old object and their values and add them as key value pairs to the new object as a side note if the old object. So our own property takes precedence. This is the spread operator. 
+- Rest operator: is the same operator but used differently here it's used to merge a list of function arguments into an array. We use it in a function argument list
+```python
+funcion sortArgs(...args){
+  return args.sort();
+}
+```
