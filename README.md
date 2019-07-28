@@ -93,3 +93,182 @@ funcion sortArgs(...args){
   return args.sort();
 }
 ```
+### Destructuring.
+```python
+const numbers = [1,2,3];
+[num1, num2] = numbers; // [num1, , num3] =numbers;
+console.log(num1, num2);
+```
+### References and Primitive Type Refresher
+  If you copy Primitive Type value is copy 
+  IF you copy references type like array, object the value coppied is pointer, so you want to make real copy you have to create new object and copy properties to new object. Just like this
+```python
+const person = {
+  name:"Hai"
+};
+const secondPerson = person;
+person.name = "Ha";
+console.log(secondPerson); // person have name Ha
+
+// real copy
+const thirdPerson = {
+  ...pereson
+};
+person.name = "Hai";
+console.log(thirdPerson); // person have name Hai
+```
+### Refresh Array functions. 
+```python
+const numbers = [1, 2, 3];
+const doubleNumArray = numbersr.map((num) => {
+  return numm * 2;
+});
+
+console.log(numbers); // 1, 2, 3
+console.log(doubleeNumArray); // 2, 4, 6
+```
+### Wrap up
+
+## Section 3: Understanding the Base Features & Systax.
+### 1. Introduction
+### 2. Build Workflow
+Why? 
+- Optimize Code
+- Use Next-Gen JavaScript Features
+- Be More Productive
+How? 
+- Use Dependency Management Tool npm or yarn
+- Use Bundler Recommended Webpack
+- Use Complier (Next-Gen JavaScript) Babel + Preset
+- Use a Development Server
+### 3. Using Create React App
+### 4. Understanding the Folder Structure
+### 5. Understanding Component Basics
+### 6. Understanding JSX
+### 7. JSX Restrictions:
+ - JSX clearly looks like html and it should, it should allow us to write html code in out JavaScript files, still since it isn't a JavaScript file and since it is JavaScript, some words can't be used. _class_ for example, which we would use in normal html assign a css class can't be used because it's a reserved word in JavaScript, we already used it here by the way, to create a new class. This is why we have to use _className_.
+  All these elements you can use here like <div> and <h1> are actually managed or provided by the React library, we are not using the real html tags, React is converting them behind the scenes and React defines the attributes in quotation marks I should say. We can define on all these elements and we don't have the class attribute as we have on the regular.
+ - Another restriction we face is that when we return something, we actually can't do return more root element. So typically you nest everything in one single root element you return.
+### 8. Creating a Functional Component
+### *Summary: Components & JSX Cheat Sheet*
+  Components are the _core building block of React apps_.
+  Actually, React really is just a library for creating components in its core
+  
+  A typical React app therefore could be depicted as a component tree - having one root elemet ("App") and then an potentially infinite amount of nested child components.
+  Each component need to return/ render some JSX code - it defines which HTML code React should render to real DOM in the end.
+  
+  JSX is not HMTL but it looks a lot like it. Differences can be seen when looking closely though (for example className in JSX vs class in "normal HTML"). JSX is just syntactic for JavaScript, allowing you write HTMLish code instead nested React.createElement(...) calls.
+  When creating components, you have to choice between two different way:
+  *Function components* (also referred to as "presentational", "dumb" or "stateless" components.
+```python
+const cmp () = > { return <div>Some JSX </div>};
+```
+  *class-based components* (also referred to as "containers", "smart" or "statefull" components) 
+```python
+class Cmp extends Component {
+  render() {return <div>some JSX</div>;}
+}
+```
+### 9.Working with Components and Re-Using them
+### 10. Outputing Dynamic Content
+### 11. Working with Props.
+### 12. Understanding the Children Property
+### 13. Understanding  & Using state
+### Summary Props & state
+  _props_ and _state_ are CORE concepts of React. Actually, only changes in props and /or state trigger React to re-render your components and potentially update the DOM in the browser (a detailed look at how React checks whether to really touch the real DOM is provided)
+  
+  Props allow you to pass data from a parent (wrapping) component to a child (embedded) component.
+```python
+// AllPosts Component:
+const posts = () => {
+  return (
+    <div>
+      <Post title="My first Post"/>
+    </div>
+  );
+}
+```
+Here, _title_ is a custom property (prop) set up on the custom _Post_ component. We basically replicate the default HTML attribute behavior we already know (e.g <input type="text"> informs the browser about how to handle that input)
+  Post Component:
+```python
+const post = (props) => {
+  return (
+    <div> 
+      <h1>{props.title}</h1>
+    </div>
+  );
+}
+```
+The _Post_ component receives the _props_ argument. You can of course name this argument whatever you want - it's your function definition, React doesn't care! But React will pass one argument to your component function => An object, which contains all properties you set up on _<Post .../>.
+_{props.title}_ then dynamically outputs the _title_ property of the _props_ object - which is available since we set the _title_ property inside _AllPosts_ component.
+
+  State whilst props allow you to pass data down the component tree (and hence trigger an UI update), state is used to change the component, well, state from within. Changes to state also trigger an UI update.
+```python
+// NewPost Component:
+class NewPost extends Component {
+  state = {
+    counter: 1
+  };
+  
+  render() {
+    return (
+      <div>{this.state.counter}</div>
+    );
+  }
+}
+```
+  Here, the _NewPost_ component contains _state_. Only class-based components can define and use _state_. You can of course pass the _state_ down to functional components, but these can't directly edit it.
+  _state_ simply is a property of the component class, you have to call it _state_ though - the name is not optional. You can then access it via _this.state_ in your class JSX code (which you return in the required render() method).
+  Whenever _state_ changes, the component will re-render and reflect the new state. the difference to _props_ is, that this happens within one and the same component - you don't receive new data (props) from outside.
+  
+### 14. Handle Event with method
+Don't add parentheses (), this would execute it immediately once react renders this to the DOM because you execute this function 
+```python
+<button onClick={this.switchNameHandler}>Switch Name</button>
+```
+### 15. To Which Events Can You Listen? 
+Clipboard Events: 
+- Event Names: 
+```python
+onCopy, onCut, onPaste
+```
+- Properties: 
+```python
+  DOMDataTransfer clipboardData
+```
+Composition Events
+- Event names: 
+```python
+onCompositionEnd onCompositionStart onCompositionUpdate
+```
+- Properties:
+```python
+string data
+```
+
+Keyboard Events: 
+- Event names: 
+```python
+onKeyDown onKeyPress onKeyUp
+```
+- Properties:
+```python
+boolean altKey
+number charCode
+boolean ctrlKey
+boolean getModifierState(key)
+string key
+number keyCode
+string locale
+number location
+boolean metaKey
+boolean repeat
+boolean shiftKey
+number which
+```
+and so on you can find a list of supported events here: https://reactjs.org/docs/events.html#supported-events
+
+### 16. Manipulating the State
+change the state you have to use this.setState() :)) 
+### 17. Using the useState() Hook for State Manipulating
+useState returns an array with exactly two elelements and always two elements, that's important. The first element we get back will always be our current state. The second element in state will always be a function that allows us to update this state, such that React us aware of it and will re-render this component which is of course
