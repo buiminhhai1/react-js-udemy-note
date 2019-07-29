@@ -270,5 +270,27 @@ and so on you can find a list of supported events here: https://reactjs.org/docs
 
 ### 16. Manipulating the State
 change the state you have to use this.setState() :)) 
-### 17. Using the useState() Hook for State Manipulating
-useState returns an array with exactly two elelements and always two elements, that's important. The first element we get back will always be our current state. The second element in state will always be a function that allows us to update this state, such that React us aware of it and will re-render this component which is of course
+### 17. Using the useState() Hook for State Manipulating 
+  useState is the most important React hook, useState is the hook that allows us to manage state in a functional component.
+  useState returns an array with exactly two elelements and always two elements, that's important. The first element we get back will always be our current state. The second element in state will always be a function that allows us to update this state, such that React us aware of it and will re-render this component which is of course
+  You don't have one big state object, though you could and you could manually merge it if you prefer that but instead, you have multiple separated state slices.
+  This is the useState hook and this is a glimpse at React hooks in general and this is the most important React hook.
+  To summaraize it, React hooks is all about these use something functions with useState being the most important, that allow you to add functionality to functional components, like here useState allows us to add state management to functional components 
+
+### 18. Stateless and Stateful Components
+State review: In a component, state is data we import - typically to show the user - that is subject to change. It could change because the database we're getting from may be updated, the user modified it - there are so many reasons that data change!
+  Stateful and Stateless Components
+ Stateful and stateless components have many different names: 
+ - Container vs Presentational components
+ - Smart vs Dumb compo nents.
+ The literal difference is that one has state, and the other doesn't. That means the stateful components are keeping track of changing data, while stateless components print out what is given to the via props or they always render the same thing.
+ 
+### 19. Passing Method References Between Components
+You can pass methods also as props so that you can call a method which might change the state in another component which doesn't hae direct access to state and which shouldn't have direct access to the state.
+It's a common pattern and it's important to know, you can pass down click handlers which allow you to change data in the parent compoent. Maybe we also want to pass a value to our function.
+
+### 20. Adding two way Binding
+onChange will be fired whenever the value in this input changes.
+
+### 21. Adding Styling with Stylesheets 
+ 
