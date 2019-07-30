@@ -294,3 +294,4 @@ onChange will be fired whenever the value in this input changes.
 
 ### 21. Adding Styling with Stylesheets 
  
+## Section 5: Styling React Components & Elements
