@@ -295,3 +295,38 @@ onChange will be fired whenever the value in this input changes.
 ### 21. Adding Styling with Stylesheets 
  
 ## Section 5: Styling React Components & Elements
+### 1. Outlining the Problem set
+THe issue we cannot use pseudos selectors here. The advantage of course is the styling is only applied to this button and to no other button in the application if we had another button. And I already mentioned the alternative would be to style it in the css file and there we can use normal css including pseudo selectors like hove but this would then globally affect all buttons in our application, even if they were placed in other components
+### 2. Setting Styles Names Dynamically
+### 3. Setting className Dynamically
+So I want to assign it here and classes like this won't work anymore because
+### 4. Adding and Using Radium 
+Radium is a popular package for react which allows us to use inline styles with pseudo selectors and media queries, so pretty awesome
+```python
+// have to import and wrap export 
+import Radium from 'radium'
+export default Radium(App);
+```
+### 5. Using Radium for Media Queries
+```python
+// import StyleRoot and wrap all element into <StyleRoot>
+import Radium, {StyleRoot} from 'radium'
+...
+render(){
+  return(
+    <StyleRoot>
+    ... some code here~
+    </StyleRoot>
+  );
+}
+```
+### 6. Enable & Using CSS Modules
+```python
+// 1. You need to install dependency react-scripts
+npm install react-scripts
+
+// 2. You Have you to add and commit project if you control source with github and 
+// You have to run 
+npm run eject 
+```
+One important note If you're using git to track your changes make sure you add and commit all changes before you run the eject command, it will not work otherwise
