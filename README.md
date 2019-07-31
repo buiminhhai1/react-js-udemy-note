@@ -330,3 +330,10 @@ npm install react-scripts
 npm run eject 
 ```
 One important note If you're using git to track your changes make sure you add and commit all changes before you run the eject command, it will not work otherwise
+
+## Section 7: Diving Deeper into Components & React Internals
+### 1. Introduction:
+  Now that we have learned about so many core features and basics of React, it's time to dive deeper into components, after all components are the core building block and the feature of the React library. So we definitely have to make sure that we know how they work, what happens behind the scenes and what we can do with them. You already learn quite a bit about that but there still are some blind spots which are what I cover 
+
+### 2. A Better Project Structure
+The question always is what should go into its own component and what do you group together in a higher component
