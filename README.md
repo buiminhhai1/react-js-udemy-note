@@ -335,3 +335,77 @@ One important note If you're using git to track your changes make sure you add a
 ### Using Error Boundaries
   componentDidCatch, this is a method which receives potential error and some additional information passed into it automatically by React and componentDidCatch will be executed whenever a component we wrap with error boundary throws an error.
   Only use error boundaries for cases where you know that might fail and you can't control that.
+  
+## Section 7: Diving Deeper into Components and React Internals
+### 4. Comparing Stateless and Statefull Components
+### 5. Class-based vs Functional Components
+Class-based: 
+```python
+class XY extends Component
+Y. Access to State
+Y. Lifecycle Hooks
+Y. Access State and Props via "this"
+
+Use if you need t omanage State for access to Lifecycle Hooks and you don't want to use React Hooks.
+```
+
+Functional components are way more powerful than they have beein in the past though and difference between class-based components and functional components therefore is way less strong than it used to be.
+```python 
+const XY = props => {...}
+Y. Access to State
+N. Lifecycle Hooks
+Y. Access Props via "props"
+
+Use in all Cases
+```
+### 6. Component Lifecycle
+You will actually learn that functional components when using React hooks have equivalent   
+Only available in Class-based Components!
+```python
+ constructor() 
+ getDerivedStateFromProps();
+ getSnapshotBeforeUpdate();
+ componentDidCatch();
+ componentillUnmount();
+ shouldComponentUpdate();
+ componentDidUpdate();
+ componentDidMount();
+ render();
+``` 
+
+#### Component Lifecycle - Creation
+- constructor(props); Default ES6 class Feature, call super(props).
+  Do: Set up State
+  Don't: Cause Side- Effects
+->>
+- getDerivedStateFromProps(props,state); (rare) 
+  Do: Sync state 
+  Don't: Cause Side-Effects
+->>
+- render(): Prepare & structure your JSX Code
+->>
+- Render Child Components
+->>
+- componentDidMount(): You can definitely set up some code that executes in the future which update the state, for example when the respone from the server is back but don't do it right away when componentDidMount runs that you immediately call setState because that will trigger a re-render cycle and that is bad performance
+  DO: Cause Side-Effects
+  DON'T: Update state (trigger re-render)
+  
+### 7. Component Update Lifecycle (for props Changes)
+  When props or state change which are the two triggers you have for a component to be re-evaluated.
+- getDerivedStateFromProps(props,state): Not use to often, you would use it to initialize the state of a component that updates based on props you're getting. for example some form control which gets external properties and then you internally want to handle user input but initialize your state or update state based on outside changes. 
+DO: Sync State to Props
+DON'T: Cause side-effect
+->>>
+- shouldComponentUpdate(nextProps,nextState): this lifecycle method or hook here is interesting because it allow to cancel the updating process.
+DO: Decide where to Continue or Not. Why woud you do that? For performance optimization. This should be used carefully because obviously, you can break your components if you block an update from happening incorrectly but it is very powerful since it allows you to also prevent unnecessary update cycles.
+DON'T: Cause Side-Effects.
+->>>
+- render(): Prepare & Structure Your JSX Code.
+->>>
+- Update Child Component Props: Now React then goes ahead updates all child components of this component, so it evaluates all the child components you have in your JSX code of this main component we're looking at here for which this lifecycle here runs and of course every child component then also goes through that lifecycle if it receives new props or state 
+->>>>
+- getSnapshotBeforeUpdate(prevProps, prevState): this is a lifecycle hook that takes the previos props and the previos state as input and that actually return a snapshot object which you can freely configure and this also is a niche lifecycle hook which we'll not use to much.
+DO: last-minute DOM ops 
+DON"T: Cause Side-effects.
+->>>>
+-componentDidMount(): A lifecycle hook that signals that you are now done with the updating, that the render method has been executed and here you can now cause side effects, you could make an HTTP Request, though you'll have to watch out to not enter an infinite loop here. DON't Update State (triggers re-render) because that will sipmly lead to an unnecessary re-render cycle.
