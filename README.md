@@ -409,3 +409,34 @@ DO: last-minute DOM ops
 DON"T: Cause Side-effects.
 ->>>>
 - componentDidUpdate(): A lifecycle hook that signals that you are now done with the updating, that the render method has been executed and here you can now cause side effects, you could make an HTTP Request, though you'll have to watch out to not enter an infinite loop here. DON't Update State (triggers re-render) because that will sipmly lead to an unnecessary re-render cycle.
+### 12. Using shouldComponentUpdate for Optimization: 
+use shouldComponentUpdate super important help to save performance
+### 13. Optimazing Functional Component with React.memo();
+This basically uses memoization which is a technique where React will memoize, so basically store a snapshot of this component and only if its input changes, it will re-render it and otherwise if its inputs do not change and some parent component wants to update this cockpit component, React will give back that stored component.  
+
+=====>>> Two methods above help us to Optimization Performance <<<=====
+### 14. When should you optimize? 
+You will have components that will basically always update when their parent updates.
+If it is the cases where X components is certainly not interested in changes related to the Y component, then you should implement your check.
+Otherwise if you're pretty sure that in all or almost all cases where your parent updates, you will need to update too, then you should not add shouldComponentUpdate or React.memo because you will just execute some extra logic that makes no sense and actually just slow down the application a tiny bit.
+
+### 15. PureComponents instead of shouldComponentUpdate
+If you implement a check where you simply want to compare all props that matter to a component for difference, then there is an easier way of writing that component.
+  PureComponents are just a normal component that already implements shouldComponentUpdate with a complete props check, so that checks for any changes in any prop of that component.
+
+### 16. How React Updates the real DOM.
+(the DOM in the browser)
+-1 The render method being called does not immediately also render to the real DOM (Of course this also applies to functional components and the JSX returned there, NOT just to class-based components with render()!).
+The name can be misleading, this does not mean that it renders it to the DOM. Render is more suggestion of what the HTML should look like in the end, but render can very well be called and lead to the same result as is already displayed and this is part of the reason why we use shouldComponentUpdate to prevent unnecessary render calls.
+-2 But even if we don't catch an unnecessary render call, maybe a prop did change and still we would render the same result for whatever reason, even then this does not mean that it immediately hits the real DOM and start re-rendering it, instead it first of all does something else, it compare virtual DOMs.
+  It has an old virtual DOM and a re-rendered or a future virtual DOM. React takes this virtual DOM approach because it's faster than the real DOM. Now a virtual DOM simply is a DOM representation in JavaScript. You can of course represent all HTML and therefore DOM elements and objects in pure JavaScript, so without rendering anything to the browser and this is what happens here and React basically keeps two copies of the DOM (Old virtual DOM and Re-render virtual DOM). 
+-3 It has the old virtual DOM and then the re-rendered one, the re-rendered one is the one which gets created when render method is called. Now as I mentioned though, re-rendering or calling render doesn't immediately update the real DOM, instead React makes a comparison.
+-4 It compares the old virtual DOM to the new one and it checks if there are any differences. 
+  If it can detect differences, it reaches out to the real DOM and updates it and even then, it doesn't re-render the real DOM entirely. For example if a button text changed, it will only update that text and not re-render the whole button, leave alone the whole DOM. 
+  If no differences were found, then it doesn't touch the real DOM. Render did execute, the comparison was made and that is why shouldComponentUpdate might make sense to prevent this if it's not needed because this of course already also consts some resources but nonetheless the real DOM is never touched, you can rely on that.
+-5 The real DOM will only be touched if there are real differences and this of course is important because as you might know, accessing the DOM is real slow, this is something you want to do as little as possible and hence, React has this virtual DOM idea, compares the virtual DOM and make sure that the real DOM is only touched if needed.
+
+This is what happens behind the scenes.
+
+
+  
