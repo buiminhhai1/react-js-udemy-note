@@ -439,4 +439,14 @@ The name can be misleading, this does not mean that it renders it to the DOM. Re
 This is what happens behind the scenes.
 ![alt text](https://github.com/buiminhhai1/react-js-udemy-note/blob/master/React%20Update%20to%20real%20DOM.PNG)
 
-  
+ ### 17. Rendering Adjacent JSX Elements
+ The naming can be confusing but "Lifecycle Hooks" have absolutely _nothing to do_ with "React Hooks!"
+props.children, children is special property that simply outputs whatever gets entered between the opening and closing tag of this component.
+
+we'll use aux component as a wrapper in cases where I want to have adjacent elements without an extra DOM element being rendered to the real DOM
+### 18. Using React.Fragment
+Fragment does exactly the same thing as our aux component does. 
+Therefore it's still nice to learn how this works under the hood.
+
+### 19. Higher Order Components (HOC) - Introduction 
+I mentioned that the aux component is a so-called higher order component which is why it's placed in the hoc forlder and it's named higher order component because all it does essentially is wraps another component, it does not contain its own logic, its own styling or add any structure to the JSX code or to the real DOM that will be rendered
