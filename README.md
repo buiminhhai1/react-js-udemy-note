@@ -437,6 +437,6 @@ The name can be misleading, this does not mean that it renders it to the DOM. Re
 -5 The real DOM will only be touched if there are real differences and this of course is important because as you might know, accessing the DOM is real slow, this is something you want to do as little as possible and hence, React has this virtual DOM idea, compares the virtual DOM and make sure that the real DOM is only touched if needed.
 
 This is what happens behind the scenes.
-
+![alt text](https://github.com/buiminhhai1/react-js-udemy-note/blob/master/React%20Update%20to%20real%20DOM.PNG)
 
   
