@@ -440,7 +440,7 @@ This is what happens behind the scenes.
 ![alt text](https://github.com/buiminhhai1/react-js-udemy-note/blob/master/React%20Update%20to%20real%20DOM.PNG)
 
  ### 17. Rendering Adjacent JSX Elements
- The naming can be confusing but "Lifecycle Hooks" have absolutely _nothing to do_ with "React Hooks!"
+ The naming can be confusing but "Lifecycle Hooks" have absolutely _nothing to do_ with "ReacWt Hooks!"
 props.children, children is special property that simply outputs whatever gets entered between the opening and closing tag of this component.
 
 we'll use aux component as a wrapper in cases where I want to have adjacent elements without an extra DOM element being rendered to the real DOM
@@ -450,3 +450,59 @@ Therefore it's still nice to learn how this works under the hood.
 
 ### 19. Higher Order Components (HOC) - Introduction 
 I mentioned that the aux component is a so-called higher order component which is why it's placed in the hoc forlder and it's named higher order component because all it does essentially is wraps another component, it does not contain its own logic, its own styling or add any structure to the JSX code or to the real DOM that will be rendered
+Now let me repeat, this is just an example here, obviously there would be nothing wrong with sticking to a div but we'll introduce other higher order component throughout the course where we for example add error handing that we can wrap around any component that makes an HTTP request and all of a sudden, this becomes more useful.
+The general concept is simply that you have a component that wraps other components that adds something to it, that could be styling, that could be additional HTML structure around it or that could also be some logic and we'll add that logic later once we added HTTP requests as I said, to automatically handle HTTP errors.
+
+### 20. Anther Form of HOCs
+- Function return a functional component.
+
+- When you see them, remember what they do behind the scenes, they add something extra to the component. That could be HTML, some logic, CSS.
+
+### 21. Passing unknown Props
+where I also want to have a class around it, right? 
+ 
+We actually do accept our props here and this will be the props of our wrapped component because we return this functional component in our higher order component, 
+Now what doesn't work is that we set props equal to props because React automatically takes all the attributes you add to your JSX code and combines them in a props object. 
+you can;t do that props={props}
+So now props would not replace that props object but be added as a single property in the props passed to the wrapped component. 
+But instead you can use another syntax where you use curly braces and then a feature called the spread operator where you spread the props you're getting. The props you're getting here in a Javascript object and the spread operator pulls out all the properites that are inside of this props object and distributes them as new key-value pairs on this wrapped component. 
+
+### 22. Setting State Correctly 
+regular components
+
+What I want to show you now only matters for class-based components that use the state property and that therefore use set state to update their state. Now the good news is we're using setState correctly here, bad news is you can use it incorrectly but I will show you how and how to avoid it.
+
+SO how could you use it in an invalid way? 
+
+Let's say that whenever our name changes and we execute the nameChangeHandler, we want to count that, so we essentially count every keystroke made or everyt change made. 
+
+SO in our nameChangeHandler, we would not just want to update persons but also some counter we keep track of. Now therefore we can of course add a counter to our state, here  
+```python
+//code here: 
+this.setState({persons: persons, changeCounter: this.state.changeCounter + 1});
+```
+and yet it is the wrong way of update this. 
+Behind the scenes, set state does not immediately trigger an update of the state of this component in a re-render cycle, instead it's basically scheduled by React and React will then perform the state update and re-render cycle when it has the available resources to do that, so when it basically decides that now is a good point of time to do that. 
+
+Typically, that will of course be instantly especially in simple applications like this one but it's not guaranteed and I want you to memorize this because that is really important. 
+
+You call setState synchoronously here but it's not guaranteed to execute and finish immediately and therefore, this state when used for a state update is not guaranteed to be latest state or the previos state on which you depend, it could be an older state.
+
+Let's say you're also calling set state somewhere else in you application which happens almost simultaneously to this set state update and for some reason, this does not execute immediately and the other set state update finishes earlier some thing like this,
+
+Then the state you depending on here might be an unexpected state, it might not be the previous state you would expect it to be and therefore there is a better way of update state when you are depending on the old state. Set state does not only take a JavaScript object, it also works when you pass in a function, so you can use either syntax.
+
+Now when you're doing state updates that don't depend on the old state, there is nothing wrong with just passing the object, so without the change counter, this is perfect.
+With the change counter however, you should use that optional syntax where you actually tow arguments and I'm using an anonymous arrow function here, where the first arguement is your old state and I'll name it prev State for previous state 
+
+
+
+
+
+
+
+
+
+
+
+
