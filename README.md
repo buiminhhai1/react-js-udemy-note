@@ -493,7 +493,7 @@ Let's say you're also calling set state somewhere else in you application which 
 Then the state you depending on here might be an unexpected state, it might not be the previous state you would expect it to be and therefore there is a better way of update state when you are depending on the old state. Set state does not only take a JavaScript object, it also works when you pass in a function, so you can use either syntax.
 
 Now when you're doing state updates that don't depend on the old state, there is nothing wrong with just passing the object, so without the change counter, this is perfect.
-With the change counter however, you should use that optional syntax where you actually tow arguments and I'm using an anonymous arrow function here, where the first arguement is your old state and I'll name it prev State for previous state 
+With the change counter however, you should use that optional syntax where you actually two arguments and I'm using an anonymous arrow function here, where the first arguement is your old state and I'll name it prev State for previous state 
 
 
 
