@@ -426,15 +426,15 @@ If you implement a check where you simply want to compare all props that matter 
 
 ### 16. How React Updates the real DOM.
 (the DOM in the browser)
--1 The render method being called does not immediately also render to the real DOM (Of course this also applies to functional components and the JSX returned there, NOT just to class-based components with render()!).
+- 1 The render method being called does not immediately also render to the real DOM (Of course this also applies to functional components and the JSX returned there, NOT just to class-based components with render()!).
 The name can be misleading, this does not mean that it renders it to the DOM. Render is more suggestion of what the HTML should look like in the end, but render can very well be called and lead to the same result as is already displayed and this is part of the reason why we use shouldComponentUpdate to prevent unnecessary render calls.
--2 But even if we don't catch an unnecessary render call, maybe a prop did change and still we would render the same result for whatever reason, even then this does not mean that it immediately hits the real DOM and start re-rendering it, instead it first of all does something else, it compare virtual DOMs.
+- 2 But even if we don't catch an unnecessary render call, maybe a prop did change and still we would render the same result for whatever reason, even then this does not mean that it immediately hits the real DOM and start re-rendering it, instead it first of all does something else, it compare virtual DOMs.
   It has an old virtual DOM and a re-rendered or a future virtual DOM. React takes this virtual DOM approach because it's faster than the real DOM. Now a virtual DOM simply is a DOM representation in JavaScript. You can of course represent all HTML and therefore DOM elements and objects in pure JavaScript, so without rendering anything to the browser and this is what happens here and React basically keeps two copies of the DOM (Old virtual DOM and Re-render virtual DOM). 
--3 It has the old virtual DOM and then the re-rendered one, the re-rendered one is the one which gets created when render method is called. Now as I mentioned though, re-rendering or calling render doesn't immediately update the real DOM, instead React makes a comparison.
--4 It compares the old virtual DOM to the new one and it checks if there are any differences. 
+- 3 It has the old virtual DOM and then the re-rendered one, the re-rendered one is the one which gets created when render method is called. Now as I mentioned though, re-rendering or calling render doesn't immediately update the real DOM, instead React makes a comparison.
+- 4 It compares the old virtual DOM to the new one and it checks if there are any differences. 
   If it can detect differences, it reaches out to the real DOM and updates it and even then, it doesn't re-render the real DOM entirely. For example if a button text changed, it will only update that text and not re-render the whole button, leave alone the whole DOM. 
   If no differences were found, then it doesn't touch the real DOM. Render did execute, the comparison was made and that is why shouldComponentUpdate might make sense to prevent this if it's not needed because this of course already also consts some resources but nonetheless the real DOM is never touched, you can rely on that.
--5 The real DOM will only be touched if there are real differences and this of course is important because as you might know, accessing the DOM is real slow, this is something you want to do as little as possible and hence, React has this virtual DOM idea, compares the virtual DOM and make sure that the real DOM is only touched if needed.
+- 5 The real DOM will only be touched if there are real differences and this of course is important because as you might know, accessing the DOM is real slow, this is something you want to do as little as possible and hence, React has this virtual DOM idea, compares the virtual DOM and make sure that the real DOM is only touched if needed.
 
 This is what happens behind the scenes.
 ![alt text](https://github.com/buiminhhai1/react-js-udemy-note/blob/master/React%20Update%20to%20real%20DOM.PNG)
@@ -495,7 +495,41 @@ Then the state you depending on here might be an unexpected state, it might not 
 Now when you're doing state updates that don't depend on the old state, there is nothing wrong with just passing the object, so without the change counter, this is perfect.
 With the change counter however, you should use that optional syntax where you actually two arguments and I'm using an anonymous arrow function here, where the first arguement is your old state and I'll name it prev State for previous state 
 
+### Typechecking With PropTypes
+As your app grows, you can catch a lot of bugs with typechecking. For some applications, you can used javaScript extensions like Flow or TypeScript to typecheck your whole application. But even if you don't use those, React has some built-in typechecking abilities. To run typechecking on the props for a component, you can assign the special propTypes property:
+```python
+import PropTypes from 'prop-types';
 
+class Greeting extends React.Component{
+  render(){
+    return (
+      <h1>Hello, {this.props.name}</h1>
+    );  
+  }
+}
+Greeting.propTypes = {
+    name: PropTypes.string
+  }
+  
+export default Greeting;
+```
+PropTypes export a range of validators that can be used to make sure the data you receive is valid. In this example, we're using PropTypes.string. Whenn an invalid value is provided for a prop, a warning will be shown in the JavaScript console. For performance reasons, propTypes is only checked in development mode.
+###### PropTypes:
+Here is an example documenting the different validator provided: 
+```python
+import PropTypes from 'prop-types';
+MyComponent.propTypes={
+  // YOu can declare that a prop is a specific JS type. BY default, these are all optional
+  optionalArray: PropTypes.array,
+  optionalBool: PropTypes.bool,
+  optionalFunc: PropTypes.func,
+  optionalNumber: PropTypes.number,
+  optionalObject: PropTypes.object,
+  optionalString: PropTypes.string,
+  optionalSymbol: PropTypes.symbol
+
+}
+```
 
 ### Using Refs
 _Refs provide a way to access DOM nodes or React elements created in the render method._
