@@ -497,12 +497,158 @@ With the change counter however, you should use that optional syntax where you a
 
 
 
+### Using Refs
+_Refs provide a way to access DOM nodes or React elements created in the render method._
+
+In the typical React dataflow, _props_ are the only way that parent components interact with their children. 
+To modify a child, you re-render it with new _props_.
+However, there are a few cases when you need to imperatively modify a child outside of the typical dataflow. 
+The child to be modified could be an instance of a React component, or it could be a DOM element. For both of theses cases, React provides an escape hatch.
+
+#### When to Use Refs
+Then are a few good use cases for refs: 
+- Managing focus, text selection, or media playback.
+- Trigger imperative animations.
+- Integrating with third-party DOM libraries.
+
+Advoid using refs for anything that can be done declaratively.
+For example, instead of exposing open() and close() methods on a Dialog component, pass an isOpen prop to it.
+
+#### Don't Overuse Refs:
+Your first inclination may be to use refs to "Make things happen" in your app.
+IF this is case, take a moment and think more critically about where state should be owned in the component hierarchy.
+Often, it becomes clear that the proper place to "own" that state is at a higher level in the herarchy. 
+
+### 28. Understanding Prop Chain Problem.
+To conclude this module, we'll now dive into another exciting feature React offers you that can help you avoid overly long chains of passing props around.
+
+Context was introduced by React and it helps us handle cases like this. where you need certain data, certain state in multiple components and you don't want to pass that state across multiple layers
+
+### 29. Using Context API.
+#### _Context provides a way to pass data through the component tree without having to pass props down manually at every level._
+  In a typical React application, data is passed top-down (parent to child) via props, but this can be cumbersome for certain types of props (e.g locale preference, UI theme) that are required by many components within an application. 
+ Context provides a way to share values like these between components with having to explicitly pass a prop through every level of the tree.
+ Read a lot of information here https://reactjs.org/docs/context.html#api
+#### When to Use Context 
+  Context is designed to share data that can be considered "global" for a tree React components, such as the current authenticated user, theme, or preferred language.
+  For example, in the code below we manually thread through a "theme" prop in order to style the Button component: 
+```python
+class App extends React.Component{
+  render() {
+    return <Toolbar theme="dark" />;
+  }
+}
 
 
+const Toolbar = (props) => {
+// The Toolbar component must take an extra "theme" prop
+// and pass it to the ThemedButton. This can become painful
+// if every single button in the app needs to know the theme
+// because it would have to be passed through all components.
+  return (
+    <div>
+      <ThemedButton theme={props.theme}/> 
+    </div>
+  );
+}
 
+class ThemedButton extends React.Component {
+  render() {
+    return <Button theme={this.props.theme}/>
+  }
+}
+```
+  Using context, we can avoid passing props through intermediate elements:
+  
+```python
+// Context lets us pass a value deep into the component tree 
+// without explicitly threading it through every component.
+// Create a context for the current theme (with "light" as the default).
 
+const ThemeContext = React.createContext('light');
 
+class App extends React.Component{
+  render(){
+  // Use a Provider to pass the current theme to the tree below
+  // Any component can read it, no matter how deep it is.
+  // In this example, we're passing "dark" as the current value
+    return (
+      <ThemContext.Provider value="dark">
+        <Toolbar /> 
+      </ThemContext.Provider>
+    );
+  }
+}
 
+// A component in the middle doesn't have to pass the theme down explicitly anymore.
+const Toolbar = (props) => {
+  return (
+    <div>
+      <ThemedButton/>
+    </div>
+  );
+}
 
+class ThemedButton extends React.Component {
+  // Assign a contextType to read the current theme context.
+  // React will find the closest theme Provider above and use its value.
+  // In this example, the current theme is "dark".
+  static contextType = ThemeContext;
+  render(){
+    return <Button theme={this.context}/>;
+  }
+}
+```
+#### Before You Use Context
+  Context is primaryly used when some data needs to be accessible by many components at different nesting levels. Apply it sparingly because it makes component reuse more difficult.
 
+#### API
+##### React.createContext
+```python
+const MyContext = React.createContext(defaultValue);
+```
+  Create a Context object. When React renders a component that subscribes to this Context it will read the current value from the closest matchhing _Provider_ above it in the tree.
+  
+  The _defaultValue_ argument is only used when a component does not have a matching Provider above it in the tree. This can be helpful for testing components in isolation without wrapping them.
+  Note: passing undefined as a Provider value does not cause consuming component to use _defaultValue_ 
 
+##### Context.Provider
+```python
+<MyContext.Provider value={/* some value */}>
+```
+  Every Context object comes with a Provider React component that allows consuming components to subscribe to context changes.
+  Accepts a _value_ prop to be passed to consuming components that are descendants of this Provider. One Provider can be connected to many consumers. Providers can be nested to override values deeper within the tree. 
+  All consumers that are descendants of a Provider will re-render whenever the Provider's value props changes. The propagation from Provider to its descendant consumers is not subject to the shouldComponentUpdate method, so the consumer is updated even when an ancestor component bails out of the update
+
+##### Class.contextType
+The contextType property on a class can be assigned a Contet object created by React.createContext(). This lets you consume the nearest current value of that Context type using this.context. You can reference this in any of the lifecycle methods including the render function.
+```python
+class MyClass extends React.Component{
+  componentDidMount() {
+    let value = this.context;
+    /* perform a side-effect at mount using the value of MyContext */
+  }
+  
+  componentDidUpdate() {
+    let value = this.context;
+    /* ... */
+  }
+  componentWillUnmount() {
+    let value = this.context;
+    /* ... */
+  }
+  render(){
+    let value = this.context;
+    /* render something based on the value of MyContext
+    */
+  }
+}
+```
+##### Context.Consumer
+```python
+<MyContext.Consumer>
+  {value=> /* render something based on the context value */}
+</MyContext.Consumer>
+```
+  A React component that subscribes to context changes. This lets you subscribe to a context within a function component.
+  Requires a function as a child. The function receives the current context value and returns a React node. The value argument passed to the function will be equal to the value prop of the closest Provider for this context above in the tree. If there is no Provider for this context above, the value argument will be equal to the defaultValue that was passed to createContext().
