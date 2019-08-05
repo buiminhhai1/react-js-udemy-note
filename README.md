@@ -686,3 +686,10 @@ class MyClass extends React.Component{
 ```
   A React component that subscribes to context changes. This lets you subscribe to a context within a function component.
   Requires a function as a child. The function receives the current context value and returns a React node. The value argument passed to the function will be equal to the value prop of the closest Provider for this context above in the tree. If there is no Provider for this context above, the value argument will be equal to the defaultValue that was passed to createContext().
+
+### Adding a Dynamic Ingredient Component
+especially the burger ingredients. since it is a good practice in React to create granular components and not big chunks.
+create a folder structure which is not only divided in components and containers but where inside the components and container, you also divide it up by feature area so that you quickly know okay if I need to work on the burger side,
+prettye straightforward,
+
+Now here's a thing we can do and we will actually do in the next lecture, we can add prop type validation
