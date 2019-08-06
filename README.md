@@ -688,8 +688,32 @@ class MyClass extends React.Component{
   Requires a function as a child. The function receives the current context value and returns a React node. The value argument passed to the function will be equal to the value prop of the closest Provider for this context above in the tree. If there is no Provider for this context above, the value argument will be equal to the defaultValue that was passed to createContext().
 
 ### Adding a Dynamic Ingredient Component
+- use method Object.keys()
+- [...Array()];
+- reduce();
+
 especially the burger ingredients. since it is a good practice in React to create granular components and not big chunks.
 create a folder structure which is not only divided in components and containers but where inside the components and container, you also divide it up by feature area so that you quickly know okay if I need to work on the burger side,
 prettye straightforward,
 
 Now here's a thing we can do and we will actually do in the next lecture, we can add prop type validation
+
+precise.
+It has a keys method which extracts the keys of a given object and turns that into an array
+You might not know it because you don't use it that often but you can create an array with it.  
+It's these inner arrays which are interesting to us. What we can do is we can simply flatten this array to make sure we pull out the values of these inner array and trade one array only which contains all these values. 
+We can do that by adding reduce to our ,,, logic here, reduce is a built-in array function.
+ which allow us to transform an array into something else.
+ It takes a function as an iput and this function receives two arguments passed in automatically by JavaScript, the previous value and the current value. The reduce method does not only accept these callback here. 
+ It will then loop through all the elements and simply add them to the inital values by step.
+ 
+### Adding the Build Controls 
+Time to add some controls so that a user can actually control which ingredients a burger should have or should not have, and for that we need to add the build controls and we'll add this component in the  
+
+### Displaying and updating the Burger Price
+
+Here however we get it back with decimal numbers in javascript so we should fix this and maybe we also want to print that in well, emphasized.
+
+### Adding the Order Button.
+
+Im; analyzing of course my old state here. Now due to the way set state works, when we execute update purchase state, we might not get the updated ingredients and therefore, one we copy ingredients 
