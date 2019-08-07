@@ -717,3 +717,20 @@ Here however we get it back with decimal numbers in javascript so we should fix 
 ### Adding the Order Button.
 
 Im; analyzing of course my old state here. Now due to the way set state works, when we execute update purchase state, we might not get the updated ingredients and therefore, one we copy ingredients 
+ y
+### Creating a Responsive Sidedrawer
+This is one clever way of adjusting this, setting the height as a property where we simply pass the percentage
+
+### Reusing the Backdrop
+
+### Improving Perfomance
+shouldComponentUpdate checks might event hit the performance more tan doing an occasional unnecessary re-rendering.
+
+I just want to highlight here that we're in the updating process. It doesn't have to be componentWillUpdate and we'll not use this hook here for anything important. SO definitely no need to implement componentWillUpdate here, componentDidUpdate will do and I simple want to console.log(orderSummar 
+
+
+Alternatively of course, you could keep this as a functional component and wrap the exported component, so the Modal constant you're exporting with React.memo().
+
+Now we're not doing that yet in the application, there is much initialization we have to do in our components.
+other hooks like WillUpdate and so on which we don't use except for login here, well you typically don't use these that often. 
+There might be some cases where you need to adjust your components state based on some props you received from outside.
