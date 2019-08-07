@@ -742,3 +742,9 @@ The React app and the servers still need to communicate from time to time but th
 So if a react app sends a request to a server, you don't get back a new html page instead you can back some json data typically or you send some json data to the server if you want to create some resources on the server for example:
   This is how that works, you have that decoupling and your server therefore typically is a RESTful API, just exposing some API endpoints to which you can send requests to get or send data from your standalone React application. 
   This is the approach I will show you in this modules and I will show you how to do that.
+### 3. Understanding our Project and Introducing Axios
+We need some way of sending these Ajax requests, and here you have basically two options,
+JavaScript of course has the XMLHTTPRequest object, this object here.
+With that you can construct your own Ajax requests and send them to specific URL and handle the repsonse.
+
+Nothing wrong with that since React is just about writing JavaScript everywhere, you can of course use all the JavaScript features including XMLHttpRequest. But writing and configuring requests with that object manually is quite cumbersome,
