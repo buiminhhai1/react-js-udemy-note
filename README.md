@@ -734,3 +734,11 @@ Alternatively of course, you could keep this as a functional component and wrap 
 Now we're not doing that yet in the application, there is much initialization we have to do in our components.
 other hooks like WillUpdate and so on which we don't use except for login here, well you typically don't use these that often. 
 There might be some cases where you need to adjust your components state based on some props you received from outside.
+
+## Section 9: Reaching out to the Web (Http/Ajax)
+### 1. Introduction: or since we have that decoupling
+### 2. Understanding HTTP request in React
+The React app and the servers still need to communicate from time to time but they don't communicate by exchanging html pages.
+So if a react app sends a request to a server, you don't get back a new html page instead you can back some json data typically or you send some json data to the server if you want to create some resources on the server for example:
+  This is how that works, you have that decoupling and your server therefore typically is a RESTful API, just exposing some API endpoints to which you can send requests to get or send data from your standalone React application. 
+  This is the approach I will show you in this modules and I will show you how to do that.
