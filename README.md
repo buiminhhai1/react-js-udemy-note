@@ -748,3 +748,26 @@ JavaScript of course has the XMLHTTPRequest object, this object here.
 With that you can construct your own Ajax requests and send them to specific URL and handle the repsonse.
 
 Nothing wrong with that since React is just about writing JavaScript everywhere, you can of course use all the JavaScript features including XMLHttpRequest. But writing and configuring requests with that object manually is quite cumbersome,
+### 4. Creating a HTTP Request to GET Data
+Axios making HTTP request in React Applications,
+Now where do we make this HTTTP request then? 
+Let's have a look at the lifecycle sides again for that, maybe we find a fitting lifecycle hook there.
+If we have a look at the lifecycle hooks we encountered during component creation, there is one life cycly hook we should you use for side effects, componentDidMount and the HTTP requests is a side effect, 
+it doesn't affect you React logic or something like that but it has the side effect of fetching new data and if your React application is dynamically outputting some data which it probable is, the data changing of course is a side effect affecting your application.
+
+So componentDidMount is a great place for causing side effects but not for updating state since it triggers a re-render.
+
+We will still update thet state here once the HTTP request has gone and got us new data because we actually want to re-update the page, so here this is actually a wanted behavior. So componentDidMount is the best place to send a HTTP Request.
+
+The thing of course is this should return some posts but trying to store them in a post constant won't work because of corse that get request happens ansynchronously, it doesn't finish immediately, it needs some time to go to the server and get the data.
+
+JavaScript though executes your code in a synchronous manner, so after this line, the next line is executed immediately, it won't pause until this is finished, so it won't store the posts and the posts const here. 
+
+This is the wanted behavior because we don't want to block the execution of our application just because we're waiting for this request to finish.
+
+Axios therefore uses promises, a default JavaScript object introduced with ES6 and thanks to our workflow we're using with create react app also available in order browsers since the code gets complied to code which also works in olders browsers.
+
+So Axios uses promises and GET returns a promise, so we can chain then on it, then is simply a method which takes a function as the input and this function will get executed once the promise resolves.
+
+So once the data from the backend is there, we can say.
+The function then receives a response object as input, this will be passed into the function automatically by axios and let's for now simply print that to the 
