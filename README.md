@@ -771,3 +771,4 @@ So Axios uses promises and GET returns a promise, so we can chain then on it, th
 
 So once the data from the backend is there, we can say.
 The function then receives a response object as input, this will be passed into the function automatically by axios and let's for now simply print that to the 
+ we get a robust application with a reuseable higher order component which we can wrap around.
