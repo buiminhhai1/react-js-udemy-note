@@ -784,3 +784,76 @@ The problem we have is if we add this higher order component, withErrorhandler t
 So we're actually attaching multiple interceptors in our application and we're attaching them to the sam axios instance. 
 
 right now and we will face later in the course, the mentioned routing will lead to the problem.
+once we have more pages where we might use withErrorHandler, we of course create this instance here multiple times, this component here and therefore all the old interceptors, so all interceptors we set up when we wrapped this around another component which might not be needed anymore still exist.
+
+React to our requests and in the worst case, they lead to errors or do somehow change the state of our application.
+
+But even in the best case, they leak memory because that's code that still runs that is not required anymore. 
+
+So we should actually remove the interceptors when this component gets unmounted, so when this specific instance of our withErrorHandler wrapper is not needed anymore and there actually is a lifecycle hook for this too, it's componentWillUnmount. 
+
+Now as the name suggests, this is a lifecycle method which is executed at the point of time a component isn't required anymore. 
+
+## Section 11: Multi-Page-Feeling in a Single-Page-App: Routing
+One important thing, routing, what this module is about is not built into the core of React. We'll use another package which is not created by Facebook but the defacto standard for this task
+
+### Routing And SPAs 
+Routing is about being able to show different pages to the user.
+Most web applications you know probably have more than one page, They have a users page, they have a post's page, an account page whatever the page is about. 
+
+Now of course you may wonder multiple pages in a single page application, how does that work together? 
+
+Well keep in mind the idea behind a single page application is to have, well guess what?
+A single page, a single html file. We still want to provide the user with a normal web using experience though, we want to show the user different pages for different URLs.
+
+The trick just is that we don't actually have multiple html files, but then we instead use JavaScript to render different pages for different paths.
+So we don't really have different files but simply we re-render parts off that single page or maybe the entire single page depending on which path the user navigated to in our application. 
+
+This is what routing is about, parsing this path, so the path after our domain and showing the appropriate jsx or component code in our app. 
+And for that as I said, we're going to use a router package to add such a functionality so that we don't have to parse that path on our own which is non-trivial. 
+That router package has a couple of tasks, first of all of course it has to parse the URL path to understand where the user wanted to go to.
+
+Then we as a developer have to configure different paths in our application which we support and the router package can then read our configuration basically, so that it knows which paths are supported and what should happen when the user visits one of these paths. 
+
+This is the third step, it will then render or load the appropriate jsx or component code depending on which path the user visited. 
+
+This is the idea behind routing, load different code, conditional JSX or component code for different paths and we use a router package so that we don't have to determine which path the user is on on our own.
+
+You shouldn't really render a whole component's code here even though you could technically do that but that will mess up your code, will make it very hard to maintain but loading components like this here this is the default case which will use a lot.
+
+This is rarely what you want in your React application, as long as the user is navigating around in it, you want to not reload the page, you want to just re-render the page in the page in the parts where it needs to be re-renderd to look like the new page.
+
+So we need to change to behaviour so that we don't have a normal link here which reloads the page but that instead we prevent the rebuilding of the page and let React router only re-render parts of the DOM or tell React what to do re-render to be precise that needs to be re-rendered.
+
+### Using Link to Switch Pages
+### Using  Routing-Related Props
+Right now in our application we are able to navigate around. We are able to do that without reloading the page.
+Let's have a look at posts, there in componentDidMount which will be executed each time we changed a page because the component is really removed and added to the DOM all the time. 
+### The "withRouter" HOC and Route Props
+this utility information and regarding the history object, the utility methods even we can use to navigate around or find out where we are at.  
+
+Now what if we actually want to get this information not in one of our containers, so not in a component which was loaded through a route as defined in the blog.js file but in a component which is rendered as part of such a container, like the POST's container. The post container is loaded with this route here in the Blog container and the post container container simply redners the post commponent then.
+
+Now if we go into that Post component and for a sencond we turn this post component into a component
+if we dare
+
+then you will actually see that the props in the post components we see that four times because we're rendering four posts is just author, clicked, title 
+
+There is no match, location, history prop in there as we have it in the posts component, plural, not the single
+
+### Absolute vs Relative Paths
+ By default, if you just enter to="/some-path" or to="some-path" that's an absolute path.
+ Absolute path means that it's always appended right after your domain. Therefore, both syntaxes (with and without leading slash) lead to example.com/some-path.
+ 
+ Relative Paths
+ Sometimes, you might want to create a relative path instead. This is especially useful, if your component is already loaded given a specific path (e.g. posts) and you then want to append something to that existing path (so that you, for example, get /posts/new)
+ 
+### Styling the Active Route
+an anchor tag managed by the React router preventing the default which would be to really send that request.
+
+NavLink It's pretty similar to link but it has some extra props which allow us to define some styling for the active link. 
+
+By default react router treats these paths here as prefixes, and the same is true for links.
+
+### Parsing Query Parameters & the Fragment
+But how do you extract search (also rederred to as "query") params
