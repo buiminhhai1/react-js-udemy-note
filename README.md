@@ -772,3 +772,15 @@ So Axios uses promises and GET returns a promise, so we can chain then on it, th
 So once the data from the backend is there, we can say.
 The function then receives a response object as input, this will be passed into the function automatically by axios and let's for now simply print that to the 
  we get a robust application with a reuseable higher order component which we can wrap around.
+### Retrieving Data from from Backend.
+however we'll also face another issue, the order summary will also use the ingredients and therefore fail.
+
+so we're essentially wrapping the burger builder and that of course has one implication,
+
+robust
+
+The problem we have is if we add this higher order component, withErrorhandler to other components, we'll call componentWillMount again and again of course because the class component we return it is higher order component is created every time this is wrapped around an existing component, so every time we call withErrorHandler on the element we're exporting as we do in the burger builder. 
+
+So we're actually attaching multiple interceptors in our application and we're attaching them to the sam axios instance. 
+
+right now and we will face later in the course, the mentioned routing will lead to the problem.
