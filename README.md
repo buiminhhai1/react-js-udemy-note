@@ -1118,7 +1118,342 @@ instead it's prepared to load it when needed
 
 when we actually include AsyncNewPost which we only do when navigating to /newpost. This is how
 
+### Lazy Loading With React suspense:
+
+Now we had a look at lazy loading in this component and lazy loading like this still works and is perfectly fine if you are using re-act 60 not six and you can check doesn't the package adjacent file and I have a new demo project here by the way which you find attached to this lecture which you should download extract NPM install and then NPM start.
+
+So if you are using the latest re-act word in here or re-act 16 or 6 or higher then you have a new way of lazy loading your routes because re-act 60 node 6 adds a new method on the re-act object.
+
+The lazy method which you can use to load your data your components asynchronously.
+
+Which means only when they are needed.
+
+And let's have a look at how this works now.
+
+So re-act lazy is a method that was added with re-act 60 not six.
+
+That allows us to load components asynchronously which means they are only loading the code behind them is only loaded when they are really required when they are being rendered.
+
+And this is for example useful when having routing in your application because only when a user visits a certain route that component will be required and re-act lazy allows you to defer the rendering and the loading of the code of that component until it is required.
+
+And that of course means that you don't load redundant code in advance.
+
+It's not just useful for routing.
+
+By the way whenever you have a use case whereas some component is loaded at a later point of time for example because you have a check and some condition needs to be met to render a certain component in all such cases you could use re-act lazy.
+
+But let me show you how it works.
+
+So let's go to the last Fall and here I'm using re-act router Dom to set up my browser router I'm using
+
+Riak fragment here which is a feature that was added with re-act 16.00 2.
+
+It's basically the same as our alks component we traded manually.
+
+It's basically a component that you can use to well wrap over all components because you always need that wrapping component and react.
+
+It does not render a real Dom element and therefore does not distort your dom.
+
+And instead of that fragment I have a little dummy navigation and then I have three routes here and
+
+if you have a look at that we are on the welcome page by default and we can switch to the user and the
+
+Post's page.
+
+OK so that is this application.
+
+Nothing fancy thus far.
+
+Now we could use re-act lazy to only load the user into posts component when we need them.
+
+Right now everything is loaded in advance but we might never visit these routes.
+
+So loading the code behind them in advance is not ideal.
+
+If there were an even bigger app with more code behind these components the issue would of course be
+
+worse.
+
+So we want to load these two components only when we need them and we can do that with this new method.
+
+How is this method used.
+
+Well let's start with the Post's component instead of importing it like this which will always force
+
+today that will be loaded in advance.
+
+We need to use dynamic import just as we did with that async component we created earlier and this module
+
+we need to use dynamic import.
+
+So we create a constant for that which we named posts.
+
+You could name it whatever you want.
+
+I just name it posts so that I can continue to not use that name down there.
+
+And the value of that constant year will be a call to react dot lazy.
+
+This new method that was added with re-act 606.
+
+Now let's move these imports to the top.
+
+Do not get any Lanting warnings.
+
+And now instead of re-act lazy we'd pass a function.
+
+Here I'll use an arrow function which returns an import statement and this is a dynamic import.
+
+Which means it's basically executed when this code runs and react will executed when we try to render
+
+this component.
+
+And here we are again still point to a file which contains our post component and important for that.
+
+We should use default exports named exports are not supported.
+
+So now I'm importing my post component but only when this function runs which means only when re-act
+
+thinks that we need to use it and react to things that we need to use it when it detects that it needs
+
+to rendered it.
+
+Now with that changed let's go down to that route here and there we now need to make a little change.
+
+Instead of using that component let's use the render method here.
+
+There we would receive all these Raut props.
+
+But in the end here I want to return something I want to return a computer component that should be
+
+rendered and there I now need to import a new component from re-act suspence component with an import.
+
+That is what I want to render here.
+
+
+
+Suspence like this.
+
+And in-between all render posts.
+
+So my constant as a component here and now let's add one more thing to that suspence component.
+
+And that's the fallback proc which should be J as X code and they all add div where I say loading and
+
+this will actually be displayed.
+
+In cases where re-act basically postpones the rendering of this wrap component and shows as well fallback
+
+in the meantime.
+
+And of course that doesn't have to be a div with loading that could be a spinner or anything like that.
+
+And now with all that let's save it go back to the front page look at the user's page load the Post's
+
+page all working.
+
+So what's special.
+
+Well we can see what's special when we reload the page and then go to the Network tab.
+
+Now after reloading clear it and now click on the post page and you will see that there it loaded a
+
+new file and that is the file holding the code for this component and that is async rendering at async
+
+loading in action because this component and its code is only fetched and rendered when we really need
+
+it and therefore we avoid loading everything in advance which can of course drastically improve the
+
+performance of your application depending on its size.
+
+So this is a neat alternative to the other way of lazy loading pages which we had before.
+
+A great advantage of this approach is that we of course can not just used is in a routing scenario.
+
+We could of course also have a scenario where we don't use that browser router so let me comment all
+
+that out.
+
+And instead let's say I have a simple button here where I say toggle mode or anything like that we add
+
+a new method to this component here.
+
+Mode handler
+
+and we add a state where we say show and it's false.
+
+Initially let's say and then there I call this set state in the function a form of said States that
+
+we can access the old state we return the updated state or our update to just state and I'll show you
+
+the opposite of what it previously was.
+
+So did I toggle that show mode.
+
+And of course you can also add name to it differently.
+
+Now we have that button.
+
+Now I bind on Click here to my.
+
+This mode handler.
+
+And now I just want to render either the user or to post page.
+
+Depending on that mode of course can also name that show posts for example up the détour too.
+
+And now let's add a simple check where you check if this state show posts.
+
+If that is true then I want to render my posts and data will also grab this code which suspends of course.
+
+Let's copy that and move it up there.
+
+Common that back in put dead in brackets.
+
+So one to render with suspense suspends my posts show posts is true.
+
+Otherwise I'll render my user component like this.
+
+Now since I have two adjacent components here I'll again use re-act fragment or use you alks component
+
+of course and wrap this.
+
+And now if this change if I go back and I click on toggle mode we see that chunk was loaded and we see
+
+the post page.
+
+So here we all take advantage of this.
+
+A sync rendering and that is really something useful and a great addition with re-act 6:16 we'll see
+
+more on that async rendering thing in future versions.
+
+And right now this is what we can use re-act lazy.
+
+Please be aware that this will not work if you're trying to serve a side rendered.
+
+Then this is not support that this API will not work yet.
+
+But if you have a client side rendered application as we have it here and of course then this is a great
+
+addition and definitely something you want to check out for cases where you conditionally render some
+
+component needed in the if statement or be dead in a routing scenario.
+
+Now of course one thing to keep in mind the benefit you will get out of this will be greater if you
+
+have larger chunks of data behind your components.
+
+If you have very simple components using suspends might actually be overkill and could even slow down
+
+your application or be suboptimal.
+
+At this point of time so lazy loading the code of course shows its full strength.
+
+If we're talking about bigger chunks of code.
+
 you load components asynchronously,
 
 and as I mentioned this is extremely useful in bigger apps where there are bigger chunks of code, a whole feature area in your application for example which might not even be visited by the user so you can save that code up front to only load it when needed.
 
+
+### Routing & The Server (Deployment)
+We're almost at the end of this routing module, a lot of content was covered here.
+
+Now there's one important thing you have to know regarding routing when using the react router, when
+
+it comes to deploying your app to a real server because you won't notice it here on the development
+
+server because it's already configured correctly.
+
+You have to remember how handling requests actually works in the web.
+
+We have the user who sends a request to the server and we have our react app which is then loaded on
+
+the index.html page.
+
+The thing is before we load to index.html page the server needs to find out which page the user actually
+
+wanted to visit.
+
+That of course is the case because the server always handles requests first,
+
+this is how the Internet works.
+
+The problem is it's the react app which knows the routes.
+
+So if we visit /posts, there is no /posts route on our server, that is defined in the javascript
+
+code which is loaded on the index.html page which we never get because we get a 404 error on the
+
+server because we tried to visit a route which is unknown to the server.
+
+And clearly this is not what you saw during development because as I said the development server is already configured correctly.
+
+We have to configure the server in a way that it always forwards requests no matter if it understands them or not, so also 404 error requests to the client, so that it always returns the index.html page, also for unknown requests because this then allows react to take over and parse the request against the routes it knows.
+
+So we should always load index.html
+
+and if then there is a request we dont know,
+
+well you learned how to handle 404 errors with the react router.
+
+Now as I said, the development server we used here already is configured to always load the index.html
+
+file.
+
+It is something you will also have to do when hosting the app on your own server though,
+
+always return index.html
+
+even and especially in 404 error cases.
+
+There is another thing you have to be aware of when hosting your app on your server,
+
+if you are hosting it on let's say example.com/
+
+so if that's the page with which we're landing on the root page of your react app, you don't need to
+
+set up anything special. But if you're serving your app from let's say example.com/myapp, so
+
+anything beneath that folder should be your react app,
+
+you need to tell react about this,
+
+the react router to be precise.
+
+You need to set the base path for the react router and I want to quickly show you how to do that. In your
+
+application,
+
+in the place where you use browser router,
+
+so in our case in the app.js file here browser router, you can also configure that and you really
+
+need to do that.
+
+But there is a base name prop you can set and by default, that's set to slash.
+
+So this is the default which you don't need to set.
+
+If your serving your app from myapp, you should set this to /myapp, then all your requests are
+
+routed against myapp/ and then the link you were pointing to.
+
+Otherwise, if you had a link like here,
+
+if you push the page change up on clicking a post, here we navigate to /posts and it would always
+
+add this to your root domain.
+
+Now if your react app is served from /myapp, it will only work correctly and add it to the
+
+end of your domain /myapp
+
+If basename is set up. So whenever you are serving your app from a sub directory, make sure to set basename.
+
+So here I will remove basename or I'll duplicate it and comment it out to leave it here for reference and
+
+remove it in the browser route
+
+we're actually using, but this is something you have to know.
