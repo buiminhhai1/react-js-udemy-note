@@ -857,3 +857,268 @@ By default react router treats these paths here as prefixes, and the same is tru
 
 ### Parsing Query Parameters & the Fragment
 But how do you extract search (also rederred to as "query") params
+
+### Understanding Nested Routes
+We're not going to reach that route because we have the exact matching for just slash
+
+Well it's our check in loadData, we're checking if our Id changed and we're checking for this,props.id  
+Now just as everywhere else here, this needs to be this.props.match.params.id, this.props.id will never be set. 
+
+### Redirecting Requests
+So enough about route parameters and nested routes, let's talk about redirecting the user.
+Sometimes you want to redirect the user, for example, let's say that you also want to lead the user to /posts, if he visits just slash. 
+
+The redirect component as it is a component is simply used in your jsx code, there 
+This is how we can redirect to ensure that the user is removed or is navigated to the route we want to have himm on. we can use,
+
+### Conditional Redirects.
+There, we probably want to redirect once we clicked submit button your and once we made our HTTP request. 
+We often then want to change the page and not remain on that page. Using the redirect component 
+so we have no chance of entering content
+Therefore we need to render this conditionally and since it's a normal component as all of js React is, we just have to render it conditionally
+
+Might feel strange at first that we render a component to leave the page but this is just how it works.
+
+### Using the History Prop to Redirect
+we can enter a new post and once this is done, we push a new page and we are redirected. Technically push pushes this page onto the stack, so if we click the back button,we go back to the new post page. 
+Whereas redirect replaces current page so if we then click the back button and you can of course try this out after you comment this in again, if you click the back button after redirecting and not by pushing, 
+alternative
+
+### Working with Guards
+Let's talk about something which is kind of related with redirecting, navigation guards. 
+A guard is something you might know from other frameworks and their routers. Typically guards is for example used when you don't know whether the user is authenticated or not and there are some paths in your application, some routes you only want to allow the user to visit if he is authenticated. With the react router, you might need to have to think about these guards in a new way.
+For example in the blog components here, in a blog container where we set up the routing for a new post and so on. 
+Since in the end, all we're doing here is jus rendering some components, the route components, the switch component, if we want to make sure that new posts can't be reached, we can simple render this conditionally. 
+
+### Handling the 404 Case (Unknown Routes)
+
+### 242. Loading Routers Lazily
+We're nearing the end, there's one more advanced concept though not difficult to implement but one advanced
+
+concept I want to cover.
+
+Let's go back to our application and to really show what I mean,
+
+let me set auth to true so that we can go to new post again.
+
+So now you see new post can be loaded,
+
+and let's go to the network tab in the developer tools. There
+
+if we have a look at all the requests once we load the page,
+
+so if I go into posts you see that we're loading this bundle.js file
+
+this contains all our source code,
+
+in here, it's relatively big because we're in development mode,
+
+it will be much smaller once you are shipping this for production,
+
+It's optimized power build workflow automatically then, I'll talk about this later when we deploy
+
+the app. Still loading the entire bundle with all the code of our application up front can be bad if we have
+
+a big application with distinct features and distinct areas in the app where a user might never visit
+
+a certain area. Like in our app, we have the posts,
+
+if the user never visits new post, loading the code responsible for that component
+
+doesn't make a lot of sense. If we have a look at our routes
+
+I'm talking about the new post component here,
+
+this should only be loaded if the user actually navigates to /newposts
+
+otherwise new posts and all potential children are never needed.
+
+So why should we download the code up front? Would it be better to not download it and hence have a smaller
+
+upfront chunk to download and instead download the code responsible for this component and its children
+
+when needed.
+
+Now for a tiny application as ours here, this is not super useful because making that extra request for one kilobyte or something,
+
+what this component is worth when it comes to its size,
+
+that's not super useful but it is useful to know this technique for real for bigger applications you are building where this might matter where you are downloading quite a bit.
+
+The technique of downloading only what you need is known as code splitting or lazy loading and there you would essentially want to make sure that in your component, you're only loading the component once you need it.
+
+How does this work? To implement code splitting or lazy loading, we have create react app and react route for and that's important.
+
+This technique will work for react router for and for create react app because code splitting depends heavily on the webpack configuration you are using, it is an advanced concept after all.
+
+So the way I'm showing you is the way it works with the config from create react app which is a pretty modern and good configuration though, so chances are it also works in any decently set up webpack project or as I said at the beginning of this course,
+
+I strongly recommend using create react app anyway.
+
+So for this to work in this setup, we need a higher order component.
+
+So let's create a new folder hoc and then there, I'll add a new component which I'll name AsyncComponent
+
+AsyncComponent
+
+.js
+
+that's the javascript file name, because this component or this code here should help me load a component
+
+asynchronously i.e. only when it's needed.
+
+Now here in this AsyncComponent file I will create a new constant, a new function in here which I'll name
+
+asyncComponent.
+
+There I expect to get my import component argument which will in the end be a function and I'll come
+
+back to how to use this asyncComponent function and what to pass here exactly over the next seconds.
+
+So there, I now need to return something and I will return a class here which extends component,
+
+so a normal react component
+
+therefore I need to import react because it will also use some jsx and component from react. Now in
+
+the body of that class here,
+
+I now of course also need a render method.
+
+But before we come to this, I'll set up state and there I want to have a state which with a component
+
+property which is null. This state here, this component property will be set to the dynamically loaded
+
+component and the code for this will get implemented in
+
+componentDidMount.
+
+So once this component was mounted here, this wrapping higher order component.
+
+Now as I said import component should be a function reference in the end,
+
+so what I want to do is I want to execute import component here and this actually will be a function
+
+which will return as a promise.
+
+I know because I know who I am how I'm going to use this AsyncComponent in the function of this.
+dynamically.
+
+So in this then blog, I can call this.setState and set my component state to cmp default. This is the
+
+case due to be set up we're using here with create react app.
+
+It is all of course heavily reliant on the type of function import component will refer to and which
+
+I'll show you in the next minutes
+
+as I said, no worries.
+
+So now at some point of time, we will have loaded the actual component we want to use and it will be
+
+stored in our state. Hence in the render method, we want to render it, I'll create a constant and name it C and
+
+this should be this.state.component.
+
+Then I want to return jsx in this render method and I'll check if C is set in a ternary expression.
+
+If it is set, then I'll render C as a normal react component,
+
+I'll use this this.props spread trick here to pass any props we might need to this component and I'll
+
+set it to null if C is not set yet,
+
+so if the component hasn't been resolved yet. Of course I now also need to export this asyncComponent
+
+function here.
+
+Now we can save this file and now we can go back to the blog component where we do import new posts,
+ 
+I want to load this dynamically now.
+
+Now the thing is when ever you are importing something like this here, with import something from somewhere
+
+you basically inform webpack, the build tool which gets used behind the scenes about this dependency
+
+and it will include it in the global bundle, this is its job.
+
+Now for a lazy loading, this is exactly the opposite of what we want to do,
+
+we don't want to include it in the bundle,
+
+we want to load it when needed.
+
+Still webpack needs to be able to dynamically prepare some extra bundle for this potentially loaded code.
+
+So what we have to do is we have to comment out this old way of importing and instead I'll create a
+
+new constant which I'll name AsyncNewPost, the name of course is up to you,
+
+this will now use this new asyncComponent function we created in hoc folder.
+
+So I'll import asyncComponent from.
+
+And now I'll move up to the hoc folder and import it from that AsyncComponent file
+
+and I'll then use AsyncComponent here and execute it.
+
+Now asyncComponent this function, requires an argument and I told you that this argument, in that function
+
+we named it import component, that this argument should be a function which is why we executed like one
+
+here in componentDidMount
+
+So we have to pass some function to asyncComponent and this should be an anonymous function,
+
+I'm using an ES6 arrow function here.
+
+The interesting part is what we return in this function
+
+and keep in mind if you write it in one line, whatever comes right of the error is immediately returned.
+
+If you use curly braces you need to return something with the return keyword
+
+so I'm going to take the longer approach.
+
+there I'll use the import keyword as a function.
+
+This is a special syntax, the dynamic import syntax which means whatever comes between the parentheses here is only imported when that function here is executed and that function here will only be executed once we render AsyncNewPost to the screen.
+
+So here, I then take my original path to new post and now I'm only importing this when this constant gets used somewhere.
+
+Now of course I want to use it somewhere, I want to use it down at the bottom of my blog container at the new post route, instead of using new
+
+post as a component,
+
+I want to use AsyncNewPost as a component.
+
+Eventually this will be a component because keep in mind AsyncComponent returns a component, we have a higher order component.
+
+It returns a class with a render method so this is a valid component.
+
+This component will eventually render some dynamically loaded component and we decide which component it should be with the function we passed to AsyncComponent.
+
+Now if we save this and we go back to our application, watch that path on the bottom right
+
+when I click on new post. Once I click there you'll see that this 1chunk.js file was
+
+loaded which is very small.
+
+This is an extra bundle webpack created because whilst bundling our code, it detected this dynamic syntax
+
+here which it knows due to our set up we're using too, this build workflow setup and therefore it created the
+
+extra bundle with the new post component and all potential child components that were exclusive to that
+
+component if any.
+
+But it didn't add it to the main bundle,
+
+instead it's prepared to load it when needed
+
+when we actually include AsyncNewPost which we only do when navigating to /newpost. This is how
+
+you load components asynchronously,
+
+and as I mentioned this is extremely useful in bigger apps where there are bigger chunks of code, a whole feature area in your application for example which might not even be visited by the user so you can save that code up front to only load it when needed.
+
