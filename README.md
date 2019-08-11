@@ -1457,3 +1457,263 @@ So here I will remove basename or I'll duplicate it and comment it out to leave 
 remove it in the browser route
 
 we're actually using, but this is something you have to know.
+
+## Section 12: Adding Routing to our Burger Project 
+### 2. Building the Checkout Container.
+So let's implement this checkout component.
+
+I'll actually implement it as a container because it will be a component which manages its own state
+
+and also passes pass this down to other components.
+
+So I'll add a new folder in containers and I'll name it checkout and in there, I'll add a checkout.js
+
+file which should hold my checkout component.
+
+It'll be a class-based component since state will be involved and yes of course a functional component with useState hook would work too but as for the rest, I'll stick to class-based components for now.
+
+So therefore, I extend the component object which I have to import together with React from the React package itself to support JSX and correctly set up that class-based component.
+
+So let's add this class,
+
+let's then export it as the default of this file and then let's plan how this checkout component should
+
+look like and should behave. What I want to have in the checkout component is a tiny summary of the checkout,
+
+so basically what the user is about to buy and the price probably and then a button to cancel the checkout
+
+process and go back to the burger builder and of course, a button to continue.
+
+And I guess for the summary, it would be nice to not again show just a list of the ingredients but maybe
+
+show the burger itself, rebuild the burger in this checkout summary. So that's the goal here, show the
+
+summary and then when the user clicks on continue, I then want to load the contact form, so step-by-step.
+
+The goal therefore is to create a checkout summary form which allows me to display a review of the burger
+
+and show the continue or cancel buttons. For that, I'll go into my components folder and add a new folder
+
+in there which I'll name checkout or maybe order to replace all order related components there like the
+
+checkout component and checkout it should be named checkout summary maybe and in there, I'll create a
+
+CheckoutSummary.js
+
+file and a CheckoutSummary.css file for the styling.
+
+Now let's have a look at the CheckoutSummary.js
+
+file, there I'll use the functional form to create the checkout summary component,
+
+so basically just the checkout summary function here as you know it.
+
+We will probably receive some props to render the burger and then return some JSX, so therefore we
+
+definitely need to import React from the React package
+
+and of course as always export checkout summary as the default.
+
+Now the goal is to display a preview of our burger here and then show the continue or cancel buttons.
+
+So what I'll do is in the JSX which I want to return here,
+
+I'll first of all wrap this in a div which I'll also use for styling purposes to give this component
+
+some style,
+
+then I want to have a h1 tag where I say we hope it tastes well, something like that and thereafter,
+
+now I want to have a box div basically where I want to preview my burger component.
+
+This div is required to set the boundaries of the burger component and of course I'm going to reuse
+
+my burger component which I already have,
+
+that's the cool thing, we can reuse it.
+
+So I'll set some inline styling here on that wrapping div which will hold my burger just to set the
+
+width of let's say 300px and then also a height of let's say 300px and let's then also set
+
+the margin to auto here.
+
+Now inside that div, I want to use my burger component, so I need to import it. I'll import burger from and now navigate
+
+up into the burger folder and there it's the burger.js file,
+
+this is our burger component which I can now conveniently add like this,
+
+the burger, a self-closing tag. I there also need to pass my ingredients and for that, it will of course
+
+be important to know how I receive these ingredients.
+
+I assume that for now I can simply just set the ingredients property of my burger component which it
+
+does expect, if we have a look at the burger component,
+
+we have props ingredients in there which we use, so I should also pass this to this
+
+component,
+
+not order summary, checkout summary, here we are.
+
+So we expect ingredients in the burger, so we should pass it and for now I'll just expect that in the checkout
+
+summary component
+
+I'll also get an ingredients property which I then just pass on. Below that, I then want to show my
+
+buttons and for that, I'll import my own buttons I built.
+
+So the button component from the UI folder and there from the button folder and then the button.js
+
+file of course and these buttons
+
+as you probably know support two different styles,
+
+we have the success and the danger class here which we can pass and we do pass it with the button type property.
+
+So I'll add my buttons below
+
+there, I'll add the first button where I'll set the button type to
+
+let's say danger with a capital D because that's the CSS class name where I simply want to say CANCEL,
+
+maybe all caps for styling purposes only and then I'll duplicate it to also have a Success button with
+
+a capital S where I will say continue.
+
+So these are the two buttons,
+
+you also know that the buttons expose the click property which simply indicates that we clicked on the
+
+button.
+
+So that is something I'll also need to do,
+
+let's split this over multiple lines, implement clicked here and then do something upon a click.
+
+Now that is something I will add, for now I just want to finish the styling of this component.
+
+So with that, we got our checkout summary.
+
+JSX code,
+
+now let me also assign a class name here to the wrapping div and this is a class I want to set up in the
+
+CheckoutSummary.css file. I'll add that CheckoutSummary.css class here
+
+because remember, we're back in our course project,
+
+we're using CSS modules here to scope our styles.
+
+There I'll set text align to center to center everything.
+
+I'll set the width to 80% maybe and the margin of auto to the center this div or this element
+
+and I'll add a media query where I check if we have a minimum width of 600px at which point of
+
+time I simply want to limit the width so that it's no longer 80%
+
+but here I will limit it to 500px.
+
+Now with that, I have to import these CSS code or the classes object to be precise from CheckoutSummary.css
+
+and then assign it here,
+
+so here I'll add classes checkout summary,
+
+taking advantage of CSS modules here.
+
+Now we get the checkout summary component,
+
+I now want to use that in my checkout file, in my checkout container to be precise.
+
+So there, I'll quickly import the checkout summary component
+
+we just created from the components folder therefore, there I created that order folder which holds the
+
+checkout summary folder and there, the CheckoutSummary.js file.
+
+Now inside my checkout component where I'll implement a render method, where I then of course return
+
+some JSX, there I want to have a div which wraps my entire page because this will be used as a page
+
+with the React router of course
+
+and in there, I'll now add checkout summary, like this.
+
+Keep in mind, checkout summary expects to get ingredients as a prop, so I should pass ingredients here
+
+and that of course is an interesting question,
+
+where do I get my ingredients from? For now,
+
+I'll simply pass a dummy ingredients object but of course this is something I will replace.
+
+I will add state to the checkout component and there in the state, I'll add ingredients and ingredients
+
+for now will be salad one, meat one, cheese one and bacon one and this again is just some dummy data which
+
+I'll replace.
+
+So for now, that allows me to pass this state ingredients, we will have to use routing to really pass
+
+ingredients later.
+
+Now we get the checkout container here,
+
+I now want to use it of course and for that, I will hardcode it into my app.js file right below
+
+the burger builder.
+
+Here I'll import the checkout container from ./containers/checkout/checkout
+
+just to see how it looks,
+
+we will load it via routing soon.
+
+Make sure to save all files and make sure npm start is running and thereafter if you visit your page,
+
+we get an error regarding the on click listener
+
+but that shouldn't be a problem right now.
+
+This is how it looks like, our checkout summary component,
+
+now we can see that somehow this div with the burger is not really centered,
+
+so this is something we should fix.
+
+For that I'll go back into the checkout summary where I use the burger and one thing I should adjust
+
+here is that I should use width 100% to take the full width of the checkout summary component.
+
+Now with that, that looks much better on both small devices and bigger devices.
+
+Now on small devices here, we got a little bit much height, this is something we can fix by disabling
+
+this height to not always setting it to 300px,
+
+so let's just get rid of the height property here
+
+too, for the styling, that was a little bit too much.
+
+Now we can definitely use that on mobile devices and on the desktop,
+
+this looks good
+
+too. Now of course, there still is some space but we need some space for bigger burgers,
+
+so this is deliberate
+
+but the main thing I now want to work on is that I don't always display this but instead this should
+
+be displayed if I click on order now,
+
+continue, then I want to load the checkout summary instead of the burger builder,
+
+that's the goal and for that of course we need routing. Now feel free to go ahead and implement this on
+
+your own and then compare your solution with mine which I'll start building in the next lecture.
