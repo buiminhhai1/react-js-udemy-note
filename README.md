@@ -1850,3 +1850,4 @@ And of course our component can subscribe to store updates and it then receives 
 It works through a subscription model and we simply say hey I want to get notified whenever the state changes, just as we say hey I want to change the state, here is an action describing my plans.
 
 This is the redux flow, this is how redux works, very theoretical though. Let's see it in action over the next lectures.
+![alt text](https://github.com/buiminhhai1/react-js-udemy-note/blob/master/Redux%20to%20the%20Rescue!.PNG)
