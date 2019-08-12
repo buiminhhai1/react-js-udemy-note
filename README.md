@@ -1717,3 +1717,196 @@ continue, then I want to load the checkout summary instead of the burger builder
 that's the goal and for that of course we need routing. Now feel free to go ahead and implement this on
 
 your own and then compare your solution with mine which I'll start building in the next lecture.
+
+## Section 14: Redux
+### 1. Module Introduction
+Welcome to this module, this is a core module in this course,it's about redux.
+
+You might already know redux, it's often named together with react but it's a standalone third party library.
+
+It is a library often used in react projects though to make state management, the management of application state easier because that can be hard in more complex react projects.
+
+We already saw that in our course project, there we already had some cases like where we have to pass data around through query props, where state management became unnecessarily difficult.
+
+Therefore in this module, we'll learn about redux, a solution to this problem which can help us make our state manageable again.
+
+For that, let's first understand what exactly state is and what exactly redux then is and how it works.
+
+### 2. What is State? Understanding State
+So what is state?
+
+Let me give you some examples.
+
+State for example are the ingredients we added to our burger, that's part of our application state, the application state of our burger builder application.
+
+The information, which ingredients we added is crucial because it determines what we need to render to the screen, how should our burger preview look like there?
+
+It's also important behind the scenes when we store that burger on a server and we need to submit all these ingredients in the HTTP request. 
+
+Another example would be the question, whether the user is authenticated or not, that can be super important as it might determine the options we're showing in the menu or the access we're granting to certain components.
+
+Also interesting is UI statelike is a given modal open, is a backdrop open, should it be open?
+
+That's super important too, it's less about data like ingredients and user authentication is, it's more about our pure UI only state.
+
+It might only be relevant to one single component, still this is also an example for a state, more of a local than an application wide state but still, state determining what should get rendered to the screen and that is in its core what you can boil it down to, state influences what you see on the screen.
+
+So therefore our last example would be a list of blog posts which we render, which we might filter, where we might need to know which of these posts were created by the user, also important state we might need in our application.
+
+And of course the list goes on and on, you can add more and more examples here, now these really just are some examples. What's now so complex about state?
+
+Why do we need extra library for that?
+
+Let's take a closer look.
+
+### 3. The Complexity of Managing State
+State management can be very complex, react is great at reacting to state changes and updating the UI accordingly but managing that state can get very difficult as our application grows.
+
+Of course react gives us the built-in state property which we use thus far but we could already see in our burger builder project that passing the ingredients from component A to component B can be very difficult and we had to use routing query parameters for that, certainly a workaround but not a very elegant one.
+
+So state management should be easier, the example from the burger builder is a classical example, nothing special. 
+
+Consider this application which is not the one we built, 
+
+It's an app with the root app component and then a user is in a products container and some subcomponents.
+
+Now let's say we have authentication added to this application, so users can sign up and sign in, to access the dashboard in the users area, we need to check if the user is signed in and only grant access if that resolves to a true.
+
+Now checking that isn't too difficult because we're probably managing the authentication status in the auth component over there.
+
+The problem now is what if we all need that information in a totally different area of our app like in the burger builder where we need ingredients in a totally different area of the app in a checkout. 
+
+If we need information there, we somehow have to create a connection between the aut component and our card component here.
+
+Well that is super complex and a very long chain of props or query params or however we manage to pass data around.
+
+It's a pity that it is this difficult because in the end, we're writing javascript right and we're having a bundled javascript file as output or a couple of bundles if we're using lazy loading.
+
+So in the end, why can't we just set some global variable which is a javascript object which stores our entire application state and which we can access from anywhere, why do we have to take the complicated route with query parameters if all we do is just use javascript in the end? 
+
+The reason is that REACT's reactivity system doesn't react to changes in some global variable you defined and it's good that it doesn't, that makes it so efficient.
+
+However, having this global store still sounds very interesting and that's exactly what redux is about as you will learn.
+
+So let's take a closer look at redux before we then implement it to see how it works in action.
+
+### 4. Understanding the Redux Flow:
+So redux to the rescue, redux is awesome, right?
+
+It allows us to solve all our problems, doesn't it?
+
+How does redux work then?
+
+Well remember that idea of having some central place where you manage the entire state, I said that we can't use a global variable for that and we can't but redux gives us a certain flow of data, a certain way of managing data that we can then nicely integrate with another package into the react app, so that react does react to changes of data.
+
+Now we'll show you how that integration works but first, let me describe her redux works.
+
+How does it manage data and how does it update it? 
+
+In the end, it's all about a central store we have in each redux application.
+
+And I want to highlight that redux is a third party library which works totally independent of react, it's most often seen in conjunction with react but theoretically, it's independent.
+
+So it's all about a central store, this store stores the entire application state, it's that simple, you can think about it as a giant javascript object.
+
+Now in a react application and again, redux is independent from react but it's the most common use case and it's a react course here in the end.
+
+We've got components and a component probably wants to manipulate or get the current application state, now it doesn't do that by directly manipulating that central javascript object, that would not be picked up by react's reactivity system and even worse, it would make our store pretty unpredictable. 
+
+If we added it from anywhere in our application, that we can never see where we made a certain
+
+change that broke our app, for example.
+
+So we need to have a clear, predictable process of updating the state on which we can rely on and which is
+
+the only process that can change our state.
+
+That is actually what redux is all about, having a clearly defined process of how your state may change.
+
+The first building block besides the central store are actions which are dispatched from your javascript
+
+code, in a react app, they are dispatched from within your components. And action is just information package
+
+in the end with a type, something like addIngredient or removeIngredient,
+
+so a description you could say. Possibly,
+
+it also holds a payload,
+
+for example if the action is addIngredient, we need to also pass the information which ingredient and
+
+that would also be a part of the action.
+
+So it's a information package we're sending out to the world or to redux to be precise,
+
+that action doesn't directly reach the store,
+
+that action doesn't hold any logic, it doesn't know how to update the store,
+
+it's just a messenger. The thing
+
+changing the store is a reducer.
+
+Now here I've written reducers because we actually can combine multiple reducers into one
+
+but in the end, you'll end up with one route reducer which is directly connected to your store in the
+
+end.
+
+So the action reaches the reducer and since the action contains a type, the reducer can check the type
+
+of the action,
+
+for example if it's addIngredient and we then define the code for that type of action in the reducer. The
+
+reducer in the end is just a pure function which receives the action and the old state as input and
+
+which then spits out an updated state.
+
+The important thing is that the reducer has to execute synchronous code only, no asynchronous code, no
+
+side effects, no HTTP requests, nothing of that,
+
+you'll learn later how you can still implement asynchronous code but in reducers, it's just input in,
+
+output out, nothing in between,
+
+no delay.
+
+So this is the reducer and the reducer spits up the updated state which then is stored in the store
+
+again and replaces the old state
+
+and that has to be done in an immutable way,
+
+so we always return a new state which can be based on the old one but which is technically a new javascript
+
+object, because objects are reference types in Javascript and we want to make sure that we don't accidentally
+
+change the old one.
+
+So that is how the reducer handles the action,
+
+now the store is up to date.
+
+How do we get the updated state back into our component then? For that, we use a subscription model.
+
+The store triggers all subscriptions whenever the state changes, whenever the state is updated in the store.
+
+And of course our component can subscribe to store updates and it then receives that update automatically,
+
+this is how simple it is.
+
+It works through a subscription model and we simply say hey I want to get notified whenever the state
+
+changes,
+
+just as we say hey I want to change the state,
+
+here is an action describing my plans.
+
+This is the redux flow,
+
+this is how redux works,
+
+very theoretical though. Let's see it in action over the next lectures.
