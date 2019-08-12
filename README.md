@@ -1813,100 +1813,40 @@ Now in a react application and again, redux is independent from react but it's t
 
 We've got components and a component probably wants to manipulate or get the current application state, now it doesn't do that by directly manipulating that central javascript object, that would not be picked up by react's reactivity system and even worse, it would make our store pretty unpredictable. 
 
-If we added it from anywhere in our application, that we can never see where we made a certain
+If we added it from anywhere in our application, that we can never see where we made a certain change that broke our app, for example.
 
-change that broke our app, for example.
-
-So we need to have a clear, predictable process of updating the state on which we can rely on and which is
-
-the only process that can change our state.
+So we need to have a clear, predictable process of updating the state on which we can rely on and which is the only process that can change our state.
 
 That is actually what redux is all about, having a clearly defined process of how your state may change.
 
-The first building block besides the central store are actions which are dispatched from your javascript
+The first building block besides the central store are actions which are dispatched from your javascript code, in a react app, they are dispatched from within your components. 
 
-code, in a react app, they are dispatched from within your components. And action is just information package
+And action is just information package in the end with a type, something like addIngredient or removeIngredient, so a description you could say. 
 
-in the end with a type, something like addIngredient or removeIngredient,
+Possibly, it also holds a payload, for example if the action is addIngredient, we need to also pass the information which ingredient and that would also be a part of the action.
 
-so a description you could say. Possibly,
+So it's a information package we're sending out to the world or to redux to be precise, that action doesn't directly reach the store, that action doesn't hold any logic, it doesn't know how to update the store, it's just a messenger. 
 
-it also holds a payload,
+The thing changing the store is a reducer.
 
-for example if the action is addIngredient, we need to also pass the information which ingredient and
+Now here I've written reducers because we actually can combine multiple reducers into one but in the end, you'll end up with one route reducer which is directly connected to your store in the end.
 
-that would also be a part of the action.
+So the action reaches the reducer and since the action contains a type, the reducer can check the type of the action, for example if it's addIngredient and we then define the code for that type of action in the reducer. 
 
-So it's a information package we're sending out to the world or to redux to be precise,
+The reducer in the end is just a pure function which receives the action and the old state as input and which then spits out an updated state.
 
-that action doesn't directly reach the store,
+The important thing is that the reducer has to execute synchronous code only, no asynchronous code, no side effects, no HTTP requests, nothing of that, you'll learn later how you can still implement asynchronous code but in reducers, it's just input in, output out, nothing in between, no delay.
 
-that action doesn't hold any logic, it doesn't know how to update the store,
+So this is the reducer and the reducer spits up the updated state which then is stored in the store again and replaces the old state and that has to be done in an immutable way, so we always return a new state which can be based on the old one but which is technically a new javascript object, because objects are reference types in Javascript and we want to make sure that we don't accidentally change the old one.
 
-it's just a messenger. The thing
-
-changing the store is a reducer.
-
-Now here I've written reducers because we actually can combine multiple reducers into one
-
-but in the end, you'll end up with one route reducer which is directly connected to your store in the
-
-end.
-
-So the action reaches the reducer and since the action contains a type, the reducer can check the type
-
-of the action,
-
-for example if it's addIngredient and we then define the code for that type of action in the reducer. The
-
-reducer in the end is just a pure function which receives the action and the old state as input and
-
-which then spits out an updated state.
-
-The important thing is that the reducer has to execute synchronous code only, no asynchronous code, no
-
-side effects, no HTTP requests, nothing of that,
-
-you'll learn later how you can still implement asynchronous code but in reducers, it's just input in,
-
-output out, nothing in between,
-
-no delay.
-
-So this is the reducer and the reducer spits up the updated state which then is stored in the store
-
-again and replaces the old state
-
-and that has to be done in an immutable way,
-
-so we always return a new state which can be based on the old one but which is technically a new javascript
-
-object, because objects are reference types in Javascript and we want to make sure that we don't accidentally
-
-change the old one.
-
-So that is how the reducer handles the action,
-
-now the store is up to date.
+So that is how the reducer handles the action, now the store is up to date.
 
 How do we get the updated state back into our component then? For that, we use a subscription model.
 
 The store triggers all subscriptions whenever the state changes, whenever the state is updated in the store.
 
-And of course our component can subscribe to store updates and it then receives that update automatically,
+And of course our component can subscribe to store updates and it then receives that update automatically, this is how simple it is.
 
-this is how simple it is.
+It works through a subscription model and we simply say hey I want to get notified whenever the state changes, just as we say hey I want to change the state, here is an action describing my plans.
 
-It works through a subscription model and we simply say hey I want to get notified whenever the state
-
-changes,
-
-just as we say hey I want to change the state,
-
-here is an action describing my plans.
-
-This is the redux flow,
-
-this is how redux works,
-
-very theoretical though. Let's see it in action over the next lectures.
+This is the redux flow, this is how redux works, very theoretical though. Let's see it in action over the next lectures.
