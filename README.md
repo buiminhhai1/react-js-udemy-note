@@ -2088,3 +2088,383 @@ In the counter container and by the way, this pattern doesn't change, it's still
 We still use container components which then may distribute it down to their components which they embed but we never change our pattern of having a few selected components getting the state and passing it on,
 
 this pattern is still the same even though we'll eventually get rid of state later.
+
+### 10. Pasing and  Retrieving Data with Action
+In the previous assignment, we added three new actions we can dispatch and we do dispatch them in our counter container, decrement,add and subtract. 
+
+Now for add and subtract which we obviously handle in our reducer, it wouldn't make sense to also receive a payload, some additional data passed along with the action type because right now, we have hard coded +10 and -8 into the reducer but of course, in a lot of applications for example when creating a new blog post, you would get that information from your component, the input the user entered for example, the ID of the post the user clicked on, you can't hard code that into your reducer for that reason.
+
+So let's also say we don't want to hard code the value by which you want to add or subtract to the counter or from the counter into the reducer, instead we want to get this information along with the action, so we can easily implement this. On our
+
+action here,
+
+we are just dispatching a javascript object and only the type property is set in stone,
+
+so to say. We can obviously add more properties to that object,
+
+no one is stopping us from doing that, we can simply add a second property for example value or just V
+
+whatever you want,
+
+you could choose any name you want here and you can of course also add multiple properties.
+
+So I'll take value here, though
+
+what you also often see is just payload, payload could then itself be a javascript object which holds
+
+all the relevant payload to this action.
+
+But that's just something you often see,
+
+you can also skip the payload and just have a value and let's say that's ten and a name and that's Max,
+
+so you can add as many properties as you want.
+
+Now here, I'll add one which I'll name val,
+
+again the name is up to you
+
+and let's say we always want to add 10.
+
+And of course since we're inside the container, we could easily connect this to some input field
+
+we have. Now for subtract, I'll add val and let's say this is 15,
+
+so now I pass the value which I want to add or subtract along with the type
+
+and again, the type property is the only property you have to have where the name is not up to you.
+
+Now we can extract that value property in our reducer,
+
+so here for add and subtract, I no longer want to add 10 or subtract 8,
+
+instead here in the add if check, I'll simply add action.val and here the property name val is of
+
+course the property name I chose here in my counter container, in
+
+this object I pass in this action, so with the action I dispatch,
+
+val, and the same of course for subtracting, here I also simply use action.val.
+
+So I as a developer of course know what I named this property when I dispatched the action and I have
+
+to retrieve my value or the data which is relevant to me in the reducer from that same property name.
+
+Save all the files and get back to the application,
+
+now the labels are wrong here we're subtracting 15 actually
+
+but let's click the buttons to see if it works.
+
+Let's subtract and we subtract the 15 and we can't add 10 again because we set val to 10 for this button.
+
+So let's quickly update the caption on the other button so that it doesn't say subtract 8, but instead that it simply
+
+says subtract 15
+
+and now our application is 100% up to date. Now though and that's important,
+
+passing a payload with the action, passing some additional data and not just passing the type.
+
+
+### 12. Updating State Immutably
+
+Now that we learned how to restructure our reducer a little bit here, let's dive into more state management.
+
+Let's add a new state here, let's maybe name it results, so a new property to our state I should say and initially should be an empty array.
+
+Now let's go to our counter component here and there, I want to add a new button, 
+so I'll first of all add a horizontal line with just hr, self-closing element and I'll add a normal button here where I'll simply say STORE_RESULT, like this and this result should get added to an unordered list, this all has no styling right now which I create below that button.
+
+Now the idea is that when I click STORE_RESULT, that I simply add the current counter value to my result list here, so for that of course I want to dispatch an action whenever this button is clicked and then push this new result to this results array, update that array with it and of course, take the current counter as input.
+
+Additionally if I click one of these results, so one of these list items, I want to remove it from the array, so it should have an ID, something like that by which I can identify it and I want to remove that list item thereafter. 
+
+For this, I first of all will start here in my container component even though I haven't worked on the reducer or anything like that and I'll simply add two new props 
+to mapDispatchToProps because I need two new functions basically, two new dispatch functions.
+
+One could be on STORE_RESULT,
+
+this should hold an anonymous function where I dispatch, I dispatch a javascript object which needs to
+
+have a type,
+
+this could be STORE_RESULT and the value should be a current counter value of course.
+
+Now this is something I don't need to pass as a payload though because since the counter is part of
+
+my application state, I will have access to it in my reducer anyways later,
+
+so I don't need to pass it here as payload.
+
+Of course you could also have use cases where you want to store some result the user entered, then you wouldn't
+
+pass it as a value from your component, here
+
+however, it's not required. I'll then duplicate this
+
+and I'll also set our property which I'll name onDeleteResult, where I want to dispatch an actual
+
+let's say with the identifier, delete result.
+
+Now I have these two props and I'll connect them in my container, here
+
+I'll add the onClick listener to the STORE_RESULT button and I'll execute this.props.onStoreResult,
+
+no parentheses as always, this is just a reference to a method and it will get executed automatically.
+
+And on the list item here, I'll also add a click listener where I'll say onDelete,
+
+so this.props.onDeleteResult.
+
+Now of course, this list doesn't have any content yet, we'll later dynamically create a list of items here,
+
+so for now, let's focus on this button here with the STORE_RESULT prop, when we click this button,
+
+right now, I have the console open, nothing happens.
+
+We also don't get an error, notice this,
+
+so you can dispatch actions which you actually don't handle in the reducer,
+
+that's the first important takeaway. We are dispatching STORE_RESULT here because we're binding on store
+
+result which executes this method,
+
+we're binding that to the button,
+
+so this action does get dispatched and it does reach the reducer because we only have one single reducer
+
+in our react app and therefore all actions make it through that reducer.
+
+But since I simply ignore it here, I have no case handling action with the type STORE_RESULT, I get to this
+
+line here where I return the current state,
+
+that's it.
+
+I just returned the current state which also means that if I changed the counter through my buttons up here
+
+and I click this, I don't reset the state,
+
+I don't return the initial state,
+
+I return the current state,
+
+so that's the first important takeaway.
+
+But let's now handle this,
+
+let's create a new case where I say STORE_RESULT and there, I want to return,
+
+now I want to return what? I want to return an updated version of my state
+
+and we should this immutable, right now in all the cases, we'll always return a new javascript object where
+
+we only update the counter for the single reason that we only have the counter property there,
+
+the whole state previously was made up only by the counter property.
+
+Now we also have a results property which is an array and therefore right now, if we increment, decrement
+
+add or subtract, we basically remove that from our state because we return the updated version of the
+
+state and it just is a javascript object with the updated counter but without a results property.
+
+And unlike set state did in react,
+
+this is not merged with the old state or anything like that,
+
+this is the new state instead.
+
+So here, the new state doesn't have results anymore
+
+so actually this is not how we should update the state,
+
+instead we should copy the old state properties and then only update the ones which need updating and this should
+
+happen
+
+immutably. So what we don't do is we don't set const newState equal to state and then set newState.Counter
+
+equals state.counter plus 1 and then we return newState here,
+
+this is not how we do it.
+
+Why do we not do it like this?
+
+Because we're mutating the old state here,
+
+instead what we do is we copy the old state.
+
+Now one way of doing this is calling object.assign, passing an empty javascript object us to the first
+
+argument and the old javascript object we want to copy as the second state here,
+
+like that.
+
+Now this will basically clone the old object in an immutable way
+
+giving us a new javascript object which has all the properties of the old object but is a technically
+
+different object and that of course is important due to the way objects and array work in javascript
+
+with the reference types or these primitive types, if that is unclear,
+
+definitely check this out,
+
+it is a core concept of javascript.
+
+Now with that we get a copy, though important, not a deep clone,
+
+so our results array still is the same object as it is here in the initial state. But here it doesn't matter,
+
+we get a copy of our state, the new state,
+
+now there if we change the counter, we're not doing this in the old state but in that copied state and
+
+we're returning that updated copied state.
+
+This will then become the new state and it is a technically new object and that's important.
+
+Now you can write it like this,
+
+the shorter way is to simply return a javascript object and there, distribute all the properties of the
+
+old state which you can do with the spread operator, state like this ...state.
+
+This simply tells javascript return a javascript object,
+
+take all the properties and values of the state argument which is our old state,
+
+distribute these properties with their values in this new object and then since we define an additional
+
+property, add this property to the object or if it already was present due to us distributing the old
+
+state as it would be for the counter, this is part of the old state,
+
+overwrite this but only this, leave results untouched.
+
+This is what's happening here, we're distributing the old state, we're overwriting counter, we're not touching
+
+results.
+
+So this is how we should update the state in all cases,
+
+do it immutably, don't touch the old state, don't just return a new object without covering all the properties
+
+of the old state
+
+or you're about to delete properties from your state, as we previously did.
+
+And with that in STORE_RESULT, we also return a javascript object where we distribute the old state thus
+
+keeping the counter
+
+but then we set results here.
+
+So this results property we want to update,
+
+we can set an equal to state results and then we can call concat which simply is like push but where
+
+push manipulates the original value,
+
+concat returns a new array which is the older array plus the argument you add to concat.
+
+So it's an immutable way of updating an array by adding an item,
+
+it returns a new array, that's the key thing here
+
+because arrays also are reference types,
+
+if you would call push,
+
+you are touching the original results property in the original state, even though you used the spread
+
+operator here,
+
+that doesn't prevent you from doing that
+
+and this is not a good practice,
+
+not how you should do it,
+
+your state management becomes unpredictable if you do it.
+
+So use concat and now push whatever you want to add to this array,
+
+for example here we could add state counter since we want to store a snapshot of the counter and push
+
+it to the results array.
+
+Now with that, we updated our state immutably for all cases,
+
+you learned how to update an array in your state
+
+immutably with concat by adding a new item
+
+and now, we can return that state here where we do return it here actually and we can use it in our
+
+counter component. There we can now bind it in mapStateToProps to a new prop, maybe a stored results
+
+prop which should be state.results, referring to that property name you set up in the reducer, results,
+
+this has to be equal
+
+so we're retrieving this state property and now, we can use stored results which we can access through
+
+this props here in our render method.
+
+So here for the list item where I want to output them, I'll do it inline here with curly braces,
+
+I can say this.props.storedResults.map and now map each stored result which I'll store in this argument
+
+here, I'll map it to this list item.
+
+So I'll simply wrap my list item and put it into my map method here to as always map this array of
+
+stored results into an array of jsx list items and there,
+
+now we have our new list item where we of course can output stored result.
+
+And now this would be our result
+
+but actually, I want to go back to the reducer and change it a tiny bit,
+
+I don't just want to store a number,
+
+I want to create an object and this is kind of optional here but I want to do it because I don't just
+
+want to have my result value
+
+and you could name this val, v, whatever you want,
+
+I also want to create an id here and that id should be something unique,
+
+so I'll simply use new date which is simply a snapshot of the date when this was added.
+
+Now I have an id and a value and now back in the counter component,
+
+I can use both storedResult_value referring to that value property here in the object
+
+I pushed to that array or I concat to this array to be precise
+
+and since we have a list, we need to set a key that can set this key to storedResult.id, that date snapshot.
+
+Now with that, if we go back to the application and I click Add 10 and I click store result, we see 10 here
+
+added in the middle,
+
+let me add 10 again,
+
+now we store 20 as a second value,
+
+So now we are storing
+
+all these values. Clicking on them doesn't do much,
+
+it also doesn't throw an error but of course we're not handling this
+
+click listener where I want to delete the result and therefore dispatch delete result.
+
+So let's implement this in the next lecture.
