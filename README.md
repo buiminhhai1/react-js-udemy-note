@@ -1870,11 +1870,7 @@ should be a javascript object which needs to have a type property.
 
 So don't mistype or anything like that, it's just type, make sure to spell this correctly.
 
-This will later be important building block in getting the information which type of action was dispatched
-
-and what we should do in the reducer,
-
-that is why type is so important.
+This will later be important building block in getting the information which type of action was dispatched and what we should do in the reducer, that is why type is so important.
 
 Type then is just some unique identifier of your choice.
 
@@ -1972,60 +1968,123 @@ this is not immutable,
 
 you're mutating the original state here.
 
-So what you instead do is you return a new javascript object where you may first copy the old state
+So what you instead do is you return a new javascript object where you may first copy the old state with the spread operator, state and then overwrite the one property you want to adjust, so the counter and if that also would be a javascript object, you would have to copy it first too so that you never mutate any data, never, always do this immutably.
 
-with the spread operator, state and then overwrite the one property you want to adjust,
+Here thankfully, counter is a number so I can simply take state.counter to get access to my old counter, just read access so I can do that, I'm not changing anything with that expression and now plus one.
 
-so the counter
+And this gets now stored in this counter property which I add to this new javascript object where I first of all copied the properties and values of my old state.
 
-and if that also would be a javascript object, you would have to copy it first too so that you never
+With that, I'm returning an updated counter or an updated state with an updated counter upon the INC_COUNTER action here.
 
-mutate any data,
+And of course I can duplicate this if statement  now to also do the same for ADD_COUNTER, so if we don't make it into the first statement, maybe we make it into the second one if the action type is ADD_COUNTER. Here however, I don't want to add one, I want to add action and now its value because I've specified a value property here in the object I dispatched.
 
-never, always do this
+Now with this, we only return state if none of these two if conditions applies, so now if we save this file and re-execute node redux-basics, we see a different output.
 
-immutably. Here thankfully, counter is a number so I can simply take state.counter to get access to my
+We get counter 0 for the first log which is executed right after initializing the store but after dispatching the two actions here, we actually get a different output for the second log where the second counter is 11 because we incremented it and we added 10 to it.
 
-old counter,
-
-just read access so I can do that,
-
-I'm not changing anything with that expression
-
-and now plus one.
-
-And this gets now stored in this counter property which I add to this new javascript object where I first
-
-of all copied the properties and values of my old state.
-
-With that, I'm returning an updated counter or an updated state with an updated counter upon the
-
-INC_COUNTER action here.
-
-And of course I can duplicate this if statement
-
-now to also do the same for ADD_COUNTER,
-
-so if we don't make it into the first statement, maybe we make it into the second one
-
-if the action type is ADD_COUNTER. Here however, I don't want to add one,
-
-I want to add action and now its value because I've specified a value property here in the object I
-
-dispatched.
-
-Now with this, we only return state if none of these two if conditions applies,
-
-so now if we save this file and re-execute node redux-basics, we see a different output.
-
-We get counter 0 for the first log which is executed right after initializing the store but after dispatching
-
-the two actions here, we actually get a different output for the second log where the second counter is 11
-
-because we incremented it and we added 10 to it.
-
-This is now actions and dispatching of actions in action,
-
-however one thing is still missing, the subscription.
+This is now actions and dispatching of actions in action, however one thing is still missing, the subscription.
 
 Let's take a closer look in the next lecture.
+
+### 7. Adding Subscriptions
+So over the last lectures, we added or we created our store and we added actions, now I also want to add my subscriptions. Subscriptions make sure that I don't have to manually call getState here in my code if I want to get the current state snapshot but to inform me whenever I need to get a new state because something changed, because if I manually do it like here in a console log, I always have to guess if something changed.
+
+So how do I create a subscription then? 
+
+I access my store and there, I have a subscribe method I can execute. 
+
+Now subscribe takes an argument, a function which will be executed when ever the state is updated, so whenever an action reached the reducer. 
+
+The function we passed to subscribe doesn't get any arguments, so here I'll use the ES6 arrow syntax with empty parentheses, and then in the function body, we can execute any code we want on state updates.
+
+So here, I'll log subscription, just a marker so that I see where this is coming from and now, I can also reach out to the store and get my state there. 
+
+The getState method is the same as before, the difference is that I now know that I should get the state here because I know hey something changed and that subscription actually, of course typically is set up right after the store was created so that we get informed about any future dispatches.
+
+So I notice that subscribe comes before dispatching the actions and this function in the subscribe method will be executed whenever action is dispatched and mutates the store.
+
+With that, let's rerun this with node redux-basics.js and what we see is we first of all get the output for the console log statement here after creating the store and then, I get two subscription outputs and then the output here after the action is patching.
+
+Now I get the two subscription outputs not because subscription comes before it getState, before this console log statement but because it's triggered when ever an action is dispatched, which of course happens before I do this console log statement.
+
+This is how a subscription works, it's getting triggered whenever the state is updated.
+
+Now that's all nice and this is now showing us all the building blocks of redux, owever it doesn't show us at all how this fits into our react application.
+
+So let's see how we connect redux to react over the next lectures.
+
+### 8. Connecting React to Redux
+So we learn about redux and the redux-basics.js file.
+
+We don't work with that file anymore now, instead now, I want to connect my react application to redux and use the advantages of redux in it, so that in the end, I managed my state with this counter and the buttons here with redux. 
+
+Of course for such a simple application like this one, redux might be overkill but it is good to use a simpler application to practice the basics, we'll then apply redux to our course project in the next module too, no worries.
+
+Now we already installed redux and with that, we can create a store.
+
+This store should be created right before our application or when our application starts, so the index.js file is a great place, this is where we mount our app component to the dom, so creating the store here also makes a lot of sense.
+
+Therefore I'll import something and now I'll use the good old ES6 imports here from redux, so from the redux package we installed, and the something is the createStore function.
+
+Then before mounting the app, I'll create the store and store it in a constant named store so a lot of stores are here I guess.
+
+So I create my store with create store, now you learned that this takes a reducer as the input. 
+
+For that, I of course need to create the reduced too and I won't do this in this file, I will have more complex reducers in react applications with a lot of code for different types of actions and therefore, we typically store that logic into their own files.
+
+Now there are different set ups you can use but you'll often see that there is a store folder in your
+
+project next to the containers and the components folder and in there, you can have a reducer.js
+
+file,
+
+this will now be the file where I'll export the reducer I want to use. Still the reducer is just a function,
+
+a function which retrieves a state and an action and then has to return a state, that doesn't change
+
+a bit.
+
+I will then export this as the file default so that we can use it outside of this file and I will also
+
+set up an initial state here,
+
+a javascript object which should reflect my initial state for that reducer. I'll set this to counter zero
+
+here too because we have a counter in this application. Now I'll assign it here for my state, initial state
+
+like this
+
+and with that, we got a finished reducer.
+
+Now we can import this in the index.js file,
+
+so I'll add an import, import reducer from
+
+and now ./store/reducer.js without the extension as always and pass that to create store.
+
+With that we're creating a store successfully with our own reducer,
+
+just like we learned before in the nodeJS file.
+
+Now of course the reducer alone doesn't do that much,
+
+we also want to connect this store which you just create and store in a constant here to our react
+
+application and we want to be able to get slices off the state in our react containers, so that we can
+
+display the state or render something depending on which state the application has.
+
+And of course we also want to be able to dispatch actions, so connecting redux to react,
+
+that is what we'll do next.
+
+
+so here I'll simply wrap it. Provider is a helper component which allows us to kind of inject our store into the react components. For hooking up the provider component with our store here,
+
+I read now manage this all internally. Well for that, we need to connect this individual container with the store or to be precise, in the end what we want to do is we want to set up our subscription here, we do this a bit differently than we did in the nodeJS file though, we won't do it manually by calling subscribe, we will use a feature provided by that react-redux package instead, let me show you which feature I mean. 
+
+In the counter container and by the way, this pattern doesn't change, it's still our container components that managed the state, now they don't manage it on their own anymore but they are now the places which receive it from redux.
+
+We still use container components which then may distribute it down to their components which they embed but we never change our pattern of having a few selected components getting the state and passing it on,
+
+this pattern is still the same even though we'll eventually get rid of state later.
