@@ -1852,4 +1852,180 @@ It works through a subscription model and we simply say hey I want to get notifi
 This is the redux flow, this is how redux works, very theoretical though. Let's see it in action over the next lectures.
 ![alt text](https://github.com/buiminhhai1/react-js-udemy-note/blob/master/Redux%20to%20the%20Rescue!.PNG)
 
+### 5. Setting up Reducer and Store
+The simplest reducer you can write simply returns the old state, so this is a valid reducer though of course it does nothing, it just returns the state you already had.
 
+But we can already use that reducer and pass it as an argument to createStore rootReducer, with that, our reducer our store is created with that reducer in mind and now we have a created store, however this store will hold an undefined state.
+
+We can verify this by console logging store and there, getState, that's a function we should execute and it will pull out the state from the store.
+
+### 6. Dispatching Actions
+In the last lecture we set up our root reducer and the store.
+
+Now I want to use that store and not just output it with this console log statement but also dispatch an action. An action is dispatched by simply accessing the store, so this store constant which holds the created store and on that store concept, we can call dispatch. Dispatch is a function
+
+and now important, this dispatch function here takes an argument and that argument is an action, that
+
+should be a javascript object which needs to have a type property.
+
+So don't mistype or anything like that, it's just type, make sure to spell this correctly.
+
+This will later be important building block in getting the information which type of action was dispatched
+
+and what we should do in the reducer,
+
+that is why type is so important.
+
+Type then is just some unique identifier of your choice.
+
+The convention is to use all uppercase string, for example INC_COUNTER, for increment counter,
+
+now you can use whatever you want here but this is the convention, all uppercase and be descriptive whilst
+
+also being short about what you're doing when this is dispatched.
+
+Now I said you can also pass some optional payload, we'll do this with the next action. Besides INC_COUNTER,
+
+let's also emit ADD_COUNTER.
+
+Now inc should increase it by 1
+
+so we don't need to pass any extra information
+
+but ADD_COUNTER should actually add a specific number to the counter and that value needs to be passed
+
+along with the type. Now the type is the one property you have to use like this,
+
+you can add any other properties you want to this object now, you can add value, name, ID whatever you want
+
+or you add one additional property which you might name payload or any other name you like which then
+
+could in turn be a javascript object grouping all the data you want to pass with the action.
+
+This is totally up to you,
+
+I'll not pass a payload object because I only want to pass one other field of information, I'll name it
+
+value
+
+but again, the property name is totally up to you and I'll set value to 10 because I want to increase to
+
+counter by 10
+
+and of course, you can pick any number.
+
+So now we're dispatching two actions,
+
+what do you think does this do to our store?
+
+Let's console log store getState here and before we execute this, I want you to guess what will
+
+now be our state, our counter in the state,
+
+what will it now be?
+
+So do you have an opinion?
+
+Let's find out.
+
+Let's rerun node redux-basics.js and
+
+let's see what it spits out.
+
+We get counter zero twice,
+
+the first is from the first console log statement right after creating the store,
+
+the second stems from this console log statement which refers to when we dispatched our actions.
+
+So here, we still have a counter of zero,
+
+did you think we would have a counter of 11 here
+
+because we incremented it by one and then add a 10?
+
+Now this would somehow be expected
+
+but of course we haven't added any logic to react to these different action types.
+
+We could have also dispatched something,
+
+it wouldn't matter because we don't listen for the action type anywhere.
+
+This is what we'll now add, in our reducer
+
+we get the action as a second argument
+
+so of course, we can react to different types of actions.
+
+We can add an if statement and see if action.type
+
+and we noted a type property will be there because I said that it is mandatory on every action we dispatch,
+
+so we can check if action.type is for example INC_COUNTER. If it is inside of the if statement,
+
+I want to return something else. Now here,
+
+one important thing, you don't set state counter plus plus which would increment it and return state because
+
+this is not immutable,
+
+you're mutating the original state here.
+
+So what you instead do is you return a new javascript object where you may first copy the old state
+
+with the spread operator, state and then overwrite the one property you want to adjust,
+
+so the counter
+
+and if that also would be a javascript object, you would have to copy it first too so that you never
+
+mutate any data,
+
+never, always do this
+
+immutably. Here thankfully, counter is a number so I can simply take state.counter to get access to my
+
+old counter,
+
+just read access so I can do that,
+
+I'm not changing anything with that expression
+
+and now plus one.
+
+And this gets now stored in this counter property which I add to this new javascript object where I first
+
+of all copied the properties and values of my old state.
+
+With that, I'm returning an updated counter or an updated state with an updated counter upon the
+
+INC_COUNTER action here.
+
+And of course I can duplicate this if statement
+
+now to also do the same for ADD_COUNTER,
+
+so if we don't make it into the first statement, maybe we make it into the second one
+
+if the action type is ADD_COUNTER. Here however, I don't want to add one,
+
+I want to add action and now its value because I've specified a value property here in the object I
+
+dispatched.
+
+Now with this, we only return state if none of these two if conditions applies,
+
+so now if we save this file and re-execute node redux-basics, we see a different output.
+
+We get counter 0 for the first log which is executed right after initializing the store but after dispatching
+
+the two actions here, we actually get a different output for the second log where the second counter is 11
+
+because we incremented it and we added 10 to it.
+
+This is now actions and dispatching of actions in action,
+
+however one thing is still missing, the subscription.
+
+Let's take a closer look in the next lecture.
