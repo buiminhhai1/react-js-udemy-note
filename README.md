@@ -2577,88 +2577,34 @@ Is this always the approach you should follow, do you always have to use redux t
 
 Well the question whether you use redux or not depends on the size of your application and the complexity of your state.
 
-You have a simple, a small application, setting up redux might take you longer than the benefits you get out of it are worth it. For any decent medium size or big application, using redux and managing the state there is probably a good idea but then still, we have to ask which state should be used for redux because you shouldn't necessarily manage all the state in it.
+You have a simple, a small application, setting up redux might take you longer than the benefits you get out of it are worth it. 
 
-Let's have a look at the various types of state, some examples and whether you should use redux for them
+For any decent medium size or big application, using redux and managing the state there is probably a good idea but then still, we have to ask which state should be used for redux because you shouldn't necessarily manage all the state in it.
 
-or not.
+Let's have a look at the various types of state, some examples and whether you should use redux for them or not.
 
-Let's consider local UI state such as showing or hiding a backdrop, opening a modal,
+Let's consider local UI state such as showing or hiding a backdrop, opening a modal, all these things which of course change the state to update the UI of your react application and hence to show something different, should you use redux for that?
 
-all these things which of course change the state to update the UI of your react application and hence
+The answer is often times, you might not use redux here, you mostly handle this within your components, that being said, you can use redux for that.
 
-to show something different, should you use redux for that?
-
-The answer is often times, you might not use redux here, you mostly handle this within your components,
-
-that being said, you can use redux for that.
-
-You can have show modal property in your global state, dispatch an action to set it to true and dispatch
-
-an action to set it to false
-
-then connect your component and listen to that property to conditionally render a modal or not but
-
-that might be overkill.
+You can have show modal property in your global state, dispatch an action to set it to true and dispatch an action to set it to false then connect your component and listen to that property to conditionally render a modal or not but that might be overkill.
 
 Often times, you can't handle that within your components just as we did it before.
 
-Another important type of state is persistent state,
+Another important type of state is persistent state, this means the state you typically also store in server side databases like the users of your application or posts of a blog, all burger orders, stuff like that.
 
-this means the state you typically also store in server side databases like the users of your application
+Now here, you typically do use redux but of course not for all the data you have in your service side database because redux of course is just for managing the state in your application as long as your application is alive. And always keep in mind, when the user refreshes your page, your state is gone so redux is not a replacement for a database, instead you store such data on a server but the relevant slices are managed by redux.
 
-or posts of a blog, all burger orders, stuff like that.
+So the post you're currently displaying, the users you currently need to display, the post the user currently may edit, these things are loaded and stored in redux so that you have them available so that you can render them to the screen but that might not include all the data you have in your database.
 
-Now here, you typically do use redux but of course not for all the data you have in your service side
+And then we have typical client state, things like is the user authenticated or filters set by the user, so if you have a dropdown allowing the user to filter your posts, that's not data you store in the database, you can't store if the user is authenticated because if he enters the wrong login information, you don't need to store it on the server unnecessarily.
 
-database because redux of course is just for managing the state in your application
+Also the filter set by the user, you might not store that on a server because it's not that important to store it in the database, you definitely need to be aware of the current filter settings on your client in your javascript code in the react application though. 
 
-as long as your application is alive. And always keep in mind, when the user refreshes your page, your
-
-state is gone
-
-so redux is not a replacement for a database,
-
-instead you store such data on a server but the relevant slices are managed by redux.
-
-So the post you're currently displaying, the users you currently need to display, the post the user currently
-
-may edit,
-
-these things are loaded and stored in redux so that you have them available so that you can render
-
-them to the screen
-
-but that might not include all the data you have in your database.
-
-And then we have typical client state, things like is the user authenticated or filters set by the user,
-
-so if you have a dropdown allowing the user to filter your posts, that's not data you store in the database,
-
-you can't store if the user is authenticated because if he enters the wrong login information, you
-
-don't need to store it on the server unnecessarily.
-
-Also the filter set by the user, you might not store that on a server because it's not that important
-
-to store it in the database,
-
-you definitely need to be aware of the current filter settings on your client in your javascript code in the
-
-react application though. This is state you definitely use redux for,
-
-you managed that via redux because it might affect multiple components or areas of your application,
-
-for example if the user is authenticated, it might be important for a lot of components in your app and there,
-
-redux really shines because the central storage then offers a huge advantage.
+This is state you definitely use redux for, you managed that via redux because it might affect multiple components or areas of your application, for example if the user is authenticated, it might be important for a lot of components in your app and there, redux really shines because the central storage then offers a huge advantage.
 
 So these are two different types of state and how you handle them.
 
-Now we will see examples for all of that over the next modules when we also add redux to our course
+Now we will see examples for all of that over the next modules when we also add redux to our course project.
 
-project.
-
-Before we do that though,
-
-it's time to practice redux.
+Before we do that though, it's time to practice redux.
