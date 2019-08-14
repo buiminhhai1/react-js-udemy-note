@@ -2468,3 +2468,197 @@ it also doesn't throw an error but of course we're not handling this
 click listener where I want to delete the result and therefore dispatch delete result.
 
 So let's implement this in the next lecture.
+### Update Arrays Immutably
+Use slice, filter, ..., concat to do this.
+
+### Outsourcing  Action Types
+If we have a look at our reducer here, we see that we have all these different cases, incrementing, adding and so on, delete, store result, all these things.
+
+And of course I emphasize that the identifiers we're looking for here in the reducer are the identifiers we should use in our container components, in our application where we want to dispatch these actions.
+
+We do so of course but there always is the danger of us simply adding a tiny typo and searching for it for hours because we don't find it. 
+
+Therefore it is a good practice to outsource your action types into constants you can use in your application so that you always just import a constant and eliminate the danger of mistyping, this is especially useful as your application grows.
+
+If you only have two types of actions you dispatch, you might not need that but for bigger applications, definitely add it. For this, I'll add a new file to my store folder and I'll name it actions.js and in there, we can simply export a constant which you now typically give the same name as the identifier
+
+we'll have.
+
+So you could have a constant which is increment and the value we assign is just that string identifier,
+
+so we just stored that string in a constant now which we export and we do that for all our actions,
+
+so we also have decrement here and the identifier is the same.
+
+Now theoretically, name of the constant and identifier don't have to match but it is a good practice,
+
+then here we have the same for add
+
+and of course for subtract, like this and of course also for store result which we also then use as
+
+the identifier and delete result, like this.
+
+So now we have this extra file where we export all these actions,
+
+this now allows us to go into the reducer and import the actions from there,
+
+we can now simply import everything from a given file and store it in some javascript object, maybe action
+
+types from ./actions. actionType
+
+now is a javascript object which has all these properties here or all these consts here I should say
+
+as properties.
+
+So now here, we can check for case actionTypes. and now here that would be increment and the same
+
+of course for decrement and so on.
+
+The huge advantage of this approach simply is we're now importing our constants here
+
+and if we mistype one constant name, we'll actually get an error by our IDE or by that build process, if
+
+we store and save everything, I'll get an error 'export Incement' not found
+
+so I have to fix my typo to have a working application again,
+
+this is why you use this approach. So I'll replace all my hardcoded strings here with the action
+
+types
+
+I'm importing, so subtract, add and so on to eliminate the danger of mistyping here.
+
+So actionTypes.STORE_RESULT
+
+and of course also actionTypes.DELETE_RESULTS so that all are replaced.
+
+And then I do the same where I dispatch them,
+
+it of course doesn't make any sense to still have hardcoded values here because I could still mistype,
+
+so I'll simply now import my action types here,
+
+so import everything as action types and this name is up to you,
+
+you can name this object whatever you want from
+
+and now I simply move up to the store folder to the actions.js file and now I use my action types here
+
+too for dispatching.
+
+So here the type is actionTypes.INCREMENT, decrement and so on
+
+and therefore, we're now always referring to that property, to the constants we are exporting in the actions
+
+file and hence we can't mess up by mistyping or having different identifiers because now we have only
+
+one place where we set up and store our identifiers
+
+and that is in this actions.js file.
+
+So now with this adjusted, the application should still work as before,
+
+as you can see I can still add and delete results and change my counter but now, we eliminated that one
+
+danger, one potential source of errors
+
+therefore outsourcing your action types into a separate file from which you then import is a good practice
+
+especially as your application grows but it doesn't have to grow that much
+
+for this to make sense.
+
+### Types of State:
+Before we finish this module and dive into more advanced redux concepts later such as running asynchronous code which we haven't covered at all yet, let me walk you through different types of state and answer the question, should every state be handled through redux.
+
+Because in the demo application in this module, we eliminated the set state call in the component and we eliminated the local component state, the state we used thus far in all react applications and projects we built in this course, instead we used the redux state and action dispatching and store binding to use that state.
+
+Is this always the approach you should follow, do you always have to use redux to begin with?
+
+Well the question whether you use redux or not depends on the size of your application and the complexity of your state.
+
+You have a simple, a small application, setting up redux might take you longer than the benefits you get out of it are worth it. For any decent medium size or big application, using redux and managing the state there is probably a good idea but then still, we have to ask which state should be used for redux because you shouldn't necessarily manage all the state in it.
+
+Let's have a look at the various types of state, some examples and whether you should use redux for them
+
+or not.
+
+Let's consider local UI state such as showing or hiding a backdrop, opening a modal,
+
+all these things which of course change the state to update the UI of your react application and hence
+
+to show something different, should you use redux for that?
+
+The answer is often times, you might not use redux here, you mostly handle this within your components,
+
+that being said, you can use redux for that.
+
+You can have show modal property in your global state, dispatch an action to set it to true and dispatch
+
+an action to set it to false
+
+then connect your component and listen to that property to conditionally render a modal or not but
+
+that might be overkill.
+
+Often times, you can't handle that within your components just as we did it before.
+
+Another important type of state is persistent state,
+
+this means the state you typically also store in server side databases like the users of your application
+
+or posts of a blog, all burger orders, stuff like that.
+
+Now here, you typically do use redux but of course not for all the data you have in your service side
+
+database because redux of course is just for managing the state in your application
+
+as long as your application is alive. And always keep in mind, when the user refreshes your page, your
+
+state is gone
+
+so redux is not a replacement for a database,
+
+instead you store such data on a server but the relevant slices are managed by redux.
+
+So the post you're currently displaying, the users you currently need to display, the post the user currently
+
+may edit,
+
+these things are loaded and stored in redux so that you have them available so that you can render
+
+them to the screen
+
+but that might not include all the data you have in your database.
+
+And then we have typical client state, things like is the user authenticated or filters set by the user,
+
+so if you have a dropdown allowing the user to filter your posts, that's not data you store in the database,
+
+you can't store if the user is authenticated because if he enters the wrong login information, you
+
+don't need to store it on the server unnecessarily.
+
+Also the filter set by the user, you might not store that on a server because it's not that important
+
+to store it in the database,
+
+you definitely need to be aware of the current filter settings on your client in your javascript code in the
+
+react application though. This is state you definitely use redux for,
+
+you managed that via redux because it might affect multiple components or areas of your application,
+
+for example if the user is authenticated, it might be important for a lot of components in your app and there,
+
+redux really shines because the central storage then offers a huge advantage.
+
+So these are two different types of state and how you handle them.
+
+Now we will see examples for all of that over the next modules when we also add redux to our course
+
+project.
+
+Before we do that though,
+
+it's time to practice redux.
