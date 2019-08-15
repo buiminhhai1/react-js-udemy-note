@@ -2608,3 +2608,13 @@ So these are two different types of state and how you handle them.
 Now we will see examples for all of that over the next modules when we also add redux to our course project.
 
 Before we do that though, it's time to practice redux.
+
+## Section 16: Redux Advanced
+### 1. Introduction (Unleash The Full Redux Power)
+Welcome to this module. Over the last two modules you learned the basics about redux, you learned what it is and why you might want to use it, we also apply that to our burger builder project. 
+
+In this module now, we'll dive deeper into redux, dive into the a little bit more advanced features and see for example how we may run asynchronous code.
+
+So let's start.
+
+### 2. Adding Middleware
