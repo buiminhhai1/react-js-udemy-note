@@ -2618,3 +2618,529 @@ In this module now, we'll dive deeper into redux, dive into the a little bit mor
 So let's start.
 
 ### 2. Adding Middleware
+Before we dive into running asynchronous code, let me dive into a super important advanced concept we have when working with redux and with that, I always mean redux the package on its own, be that connected to your react app or not.
+
+You may add middleware to it right between your action being dispatched and it reaching the reducer, this is where you can add middleware.
+
+Now you might not know what middleware is, if you're a server side developer having worked with Express.js for example, you might have an idea though. Middleware basically is a term used for functions or the code general you hook into a process which then gets executed as part of that process without stopping it.
+
+So we can add middleware and the action will still reach the reducer thereafter but we can do something with that action before it reaches the reducer, that can be simply logging something, but that will also become important later when we want to execute asynchronous code, so for now, let's see middleware in action by adding it to our project. 
+
+To show you how middleware works, let me go into the index.js file, the file where we actually create the store.
+
+It's at this point of time that we can also add middleware to the project and for that of course, we need to learn how to exactly do that.
+
+First of all we need a middleware.
+
+As I said middleware in this case here is just a piece of code, specifically a function.
+
+Now I'll create my own middleware here, later we'll add middleware provided by other providers.
+
+I want to create a simple middleware which simply logs each action we issue, so what I want to do is I'll create a new constant and I'll name it logger, this will be the name of my middleware so to say, of course the name of the content is totally up to you as always. 
+
+This then takes a function and I will use the ES6 arrow syntax.
+
+It will get the store as an input, this is the case because we will soon use a specific method provided by redux to connect our own middleware to the store and this method provided by redux will eventually execute our middleware function and give us the store.
+
+Now the function body of this middleware function then looks like that, we return another function, so that can be confusing but this function simply returns another function.
+
+I'll also write this other function in the ES6 arrow function syntax, this other function will receive the next argument, you can name this argument whatever you want but next makes sense because this will be a function which you can execute to let the action continue its journey onto the reducer, you might know this next function if you are an experienced express developer.
+
+So this function which is returned here will also be executed by redux in the end, this function then and now it really becomes a bit confusing but this function now also returns a function, the last one though, which will receive the action you dispatched as an input, again this function will also be executed for you.
+ 
+So this nested function party here is simply a middleware, now inside that inner function which receives the action, we can also access a store and this next function and of course the action itself.  
+
+And here we can now execute the code we want to run in between the action and the reducer.
+
+So here I'll add a log statement, mark it as middleware, so that's just for us so that we can quickly see where this is coming from and there I'll say dispatching and I'll print the action. 
+
+Thereafter, I will execute next and here, important, this will now let the action continue to the reducer, though for that to succeed, we need to pass the action as an argument, now that's important because you could theoretically also change that action here in the middleware, we have access to it, we get it as an argument, we could change the type. 
+
+Of course we should do that with caution because we can break our application or worse than that, we can implement unexpected behaviors.
+
+So here I will call next and pass the unmodified action, the cool thing is I can now store the result of this call which I will need to return in this inner function, so I will return results here.
+
+Now in between these two steps, I can log something else, so console log, log a middleware related log statement here and there, I will have my next state so I can simply called store.getState because I do have access to my store, we get it in the outer function, it's the normal redux store which you learn has to getState method, so I can of course call that in the middleware too.
+
+So this function tree is in the end what gets executed, all of that is done by redux, we don't have to call any of these functions, all we have to do is apply this middleware to our store.
+
+So how do we do that?
+
+First of all, we need to import something from redux, so here besides combineReducers, I'll import applyMiddleware, this function as the names suggests allows us to add our own middleware to the store.
+
+So here in create store where we initialize the store, we can add more arguments and the second argument here can be a so-called enhancer.
+
+Now this enhancer is nothing else than a middleware for example, so here we can call applyMiddleware and now we can pass our logger constant which holds this function tree which happens to be a valid middleware executable by redux to apply middleware and therefore connect that to the store.
+
+And this already is all here and actually, you can pass a list of middlewares here to applyMiddleware, they will be executed in order then. 
+
+Here we only have one though, so let's save this and then run npm start to start this project.
+
+This should allow us to still use the project as before but we should get additional output here on the right in the console.
+
+So here if we click increment, we see two logs here, the first one is the dispatching log where we see the action we dispatched, that's the javascript object we dispatched and the second one is the next state where we see the updated state and that of course happens for every action we dispatch.
+
+So this is our middleware in action, now of course the middleware can already be nice to do exactly that, log your state and see very well what's going on. 
+
+Now a more useful use case for a middleware is to be seen later when we actually handle asynchronous code.
+
+But first I want to stick to this idea of getting some insights into this state, it would be nice for debugging if we could always look into the store.
+
+So if we had some logging but more than that, that even if we just didn't dispatch anything, we could still look into the current store.
+
+Let's have a look at what can help us with that in the next lecture.
+
+### 3. Using the Redux developer tool
+You should see the redux dev tools open up here on the right, now it's saying no store found because we haven't followed the second step where we have to basically inform this extension that there is a store in our web app and for that, we simply need to set up a special variable here or pass a special enhancer we should say to our create store method. Since we're using a iddleware we have to use the advance store set up but it's still pretty simple. Let's copy that strangely named variable here on the window object, the redux dev tools extension compose thing here, this essentially is a variable which is injected by the Chrome extension into our javascript at runtime so it will be available. 
+
+Back in our code in the
+
+index.js file where
+
+we create our store,
+
+I will first of all as instructed here create a custom constant before we do anything on the store, I'll
+
+name it composeEnhancers. This will then be our special variable or in case that can't be found,
+
+we'll fall back to a default compose function provided by redux,
+
+you can import it from the redux package.
+
+Now compose is a little bit similar to combineReducers, combineReducers allows us to combine well
+
+reducers, compose allows us to combine enhancers, applyMiddleware is only for middlewares if we have
+
+other enhancers like the store dev tools, we need to use compose to compose a set of enhancers with both
+
+the dev tools features and our middleware.
+
+So we also add compose here, separate it with this or sign to take this dynamically injected variable if available
+
+but if not, to still have to fall back to the native redux solution which of course doesn't give us dev
+
+tools support then.
+
+So now composeEnhancers essentially just holds a function,
+
+if we go back to the documentation,
+
+we see that now we should create our store and use this new composeEnhancers function which uses either
+
+the dev tools function or the natively built-in one to then pass applyMiddleware to it.
+
+So we'll do that,
+
+I will wrap applyMiddleware in create store with composeEnhancers,
+
+so with this constant name here composeEnhancers, wrap applyMiddleware with it so pass applyMiddleware
+
+as a function to that,
+
+you don't need to pass anything about the dev tools because it will be passed in automatically, if
+
+that is chosen, so if that is available.
+
+So we got a set up where we should be able to connect our browser extension to the store running in
+
+our Javascript code.
+
+Let's have a look, let's go back to the react application and there, you should already see that the
+
+redux view here is filled with life.
+
+Here you see all actions which were emitted, like the init action which happens first,
+
+can shrink this to get a different view on this
+
+and there you see for each action, what type this was or which payload it actually carried,
+
+also anything besides type, what the state is at this point of time, how it changed the state
+
+and you can always look into the state therefore with this state button at a given point of time.
+
+Now if I dispatch a new action by for example subtracting 15, you'll see it gets added here
+
+and if you click on it, we see what the state is after this action, this state here,
+
+you also see the old state if you click on the action, on the init action,
+
+so you see the state at different points of times. You'll see how the subtract action changed the state,
+
+it deducted 15 off the counter and you'll see what the action carried,
+
+that's pretty useful.
+
+Now we can add more and more and we can always see how we adjusted our state and what our current state
+
+is and what our state was in the past.
+
+So redux dev tools are extremely useful and definitely dive into the documentation I pointed you to
+
+to learn more about them.
+
+Now one important feature I want to show you is the time traveling, with the redux dev tools,
+
+you can travel through time.
+
+So for example, of course the application we see here reflects the state after all these actions
+
+but if we wanted to rewind and say yes let's go back to that subtracting here, you can click on subtract and
+
+then on jump
+
+and now you see you are back to that point of time where you just subtracted 15.
+
+Now the old states are not lost,
+
+you can always go back to there by clicking jump on that again
+
+but you can also go back and for example skip this to update your state as if you haven't ever dispatched
+
+this action
+
+and of course, this can also be reverted.
+
+So this is a extremely nice feature which gives you a lot of debugging possibilities and especially
+
+more complex apps,
+
+this is great to make sure that only actions are dispatched you expected to be dispatched and to
+
+find out why the state is currently in
+
+well the state it is in.
+
+### 5. Executing Asynchronous Code - Introduction
+utilize
+### 6. Introduction Action creators
+how does that look like? 
+What is that? 
+An action creator is just a function which returns an action or which creates an action, hence the name. 
+
+An action creator would return such an object and you can see the benefit when we talk about asynchronous code. 
+
+As I said action creators are useful for handling asynchronous code.
+But le me also quickly elaborate on the question whether we should use them for synchronous code or not, 
+
+it's a clean way of creating you actions, you have everything about actions in one file, you don't have to create the action object anywhere else. 
+
+
+
+
+
+
+
+
+In the last video, we introduced some synchronous action creators, now I want to take advantage of them to handle asynchronous code and to handle asynchronous code, we need to add a special middleware to our redux project, a third party library we can add called redux-thunk. 
+
+Here I'm on the github page, simply google for redux-thunk written like this to find it, here you can find more instructions on that.
+
+Generally, this is a library which as I just said adds a middleware to your project which allows your actions to not or your action creators to be precise to not return the action itself but return a function which will eventually dispatch an action. 
+
+With this little trick, not returning the action itself but a function which will then dispatch one, we can run asynchronous code because the eventually dispatched one part is the part which may run asynchronously, it'll become clearer once we add it.
+
+So to add it, let's pause or let's quit npm start and let's install a new package with npm install --save, the name is redux-thunk, written like that.
+
+Now with this, this will get downloaded and stored as always and we can then register it as a middleware to our project.
+
+Detailed instructions can always be found on the github page of course, there you see that after installing it, in the end we just add it with applyMiddleware.
+
+So let's go back into our index.js file where we create the store and add middleware and there, I'll now import this new package.
+
+So I'll import something from redux-thunk and that something can be found on their page, they actually have a default export so we don't need curly bracers, we can give it any name we want, I'll stick to thunk but you can rename this to whatever you want, this package essentially just exports the middleware.
+
+Now this already is a middleware, so behind the scenes it looks like our custom middleware, couple of nested function calls and therefore we can add it. 
+
+Now here, in applyMiddleware I'll add it after the logger thunk, so that object we just imported, that function to be precise.
+
+So this is the middleware added, with that we can go back to our action creators in the actions.js file and let's say in storeResult, we actually want to execute set timeout and only after 2 seconds we want to store the result.
+
+So here in this function which gets executed, somehow in there, we want to return this action after two seconds to simulate that we previously or prior to this action reached out to a server to store it there and only update our state once this one's successful, for example. 
+
+Now with that, with the current set up here, this won't work but with the thunk middleware added, what we can do is we can change this return statement here and I'll put it right in front of set timeout, we'll clean up the rest here soon, so I will add a new return statement actually which will return a function, that's important.
+
+Now you can again use the function keyword, this function receives dispatch as an argument, the dispatch action, now we get dispatch in here due to redux-thunk. 
+
+I said that middleware runs between the dispatching of an action and the point of time the action reaches the reducer, now the thing we do here is we still dispatch an action but then redux-thunk, the middleware comes in, steps in, has access to the action there, basically blocks the old action we could say and dispatches it again in the future.
+
+Now the new action will reach the reducer but in-between, redux-thunk is able to wait because it can dispatch an action whenever it wants.
+
+This is the asynchronous part and that is exactly allowing us to execute some asynchronous code inside of this function and of course, we can also use good old ES6 arrow syntax here, like this.
+
+So the code inside of this dispatch function here is executed and now inside of set timeout, inside of this function passed to set timeout, we can execute dispatch to now dispatch whichever action we want to dispatch.
+
+Now of course, we would create an infinite loop if we again dispatch storeResult here, our action creator.
+
+So what do we typically do is we create asynchronous action creators, which in the end dispatch actions created by synchronous ones.
+
+So what I'll do is I'll quickly create a new action creator and export it, I'll name it saveResult, this will now still be the action creator as we had it before receiving the result and there, returning
+
+the action we use previously with type storeResult,
+
+so that is my synchronous action creator. In storeResult
+
+however, I will now dispatch exactly that saveResult action creator which returns me this action
+
+which actually updates the state and the store because it is the action of the type we handle in the
+
+reducer.
+
+Now before we see that in action, we should make the flow clearer,
+
+there's one thing we have to keep in mind, here in storeResult when we return this function which will
+
+get executed by redux-thunk and where we have set timeout, where we then dispatch the action which
+
+should run asynchronously and update the store,
+
+we need to execute saveResult which is this action creator as a function of course and pass res
+
+on
+
+so the redo pass the payload to the store. With that,
+
+make sure to save all files including the counter.js file and then let's restart npm start to see
+
+if this works
+
+and to also see the flow of events in our redux dev tools. So the app loaded, we can still manipulate
+
+our counter but if I click storeResult here,
+
+you see that it took two seconds to actually print storeResult.
+
+Now that's the interesting thing,
+
+you never saw this other action creator
+
+with the set timeout inside of it lead to any output.
+
+If I click storeResult, nothing happens immediately, only after two seconds we see storeResult.
+
+So only the action dispatch in there after two seconds leaves a footprint because it's our synchronous
+
+action and only synchronous actions may edit the store. The other action creators like storeResult
+
+which runs some asynchronous code
+
+are only possible due to redux-thunk and are caught in between,
+
+they never make it to the reducer,
+
+we only use them as a utility step in-between to run our asynchronous code which happens to be required
+
+to run on a lot of actions and then dispatch the synchronous action to change the state in the store
+
+once we are certain that we know what to do there,
+
+so once our asynchronous code finished, this is why we see it here. In the console interesting enough,
+
+where we have our logger middleware, if I clear that, you'll see that we get more output because the logger
+
+logs everything which reaches the action funnel and that includes our function which is returned by
+
+the asynchronous action. We never added the state here though because that gets blocked by redux-thunk.
+
+So this is how we can work with action creators to handle asynchronous code in our redux store.
+
+### 7. Restructuring Actions
+So we introduced action creators in the last lectures and you learned that they are especially useful when working with asynchronous code because together with redux-thunk, that middleware, we could basically find a place to execute our asynchronous code when dispatching an action and block that original dispatching to then just dispatch another action, all that handled by that redux-thunk middleware once our asynchronous task is done. 
+
+Now with that, we got this new actions file which not only holds our action types, so the unique identifiers so to say but also all these creator functions which use these identifiers. 
+Obviously our file here in the demo project isn't that big, we can of course simply stick to one file but we also split up the reducers into counter and result and you typically also do that for actions as your application grows and you're going to see that in the burger builder project. 
+
+Therefore I'll create new files here, I'll create a counter.js file and I'll create a result.js file, so just like in the reducers folder, now for actions. I'll rename the actions file to action types because here, I now only want to export these unique identifiers, so that I have one file providing all the action types my application knows and theoretically, you could of course also split up into multiple files.
+
+Now I'll take my action creators and put them into their respective files so for the counter, I'll take the increment, decrement, add and subtract action creator, cut it from the action types file and put it into the counter file.
+
+Now of course, this reference to this constant won't work anymore because that constant now lives in
+
+a different file.
+
+So I should import that and I will import everything as action types from ./actionTypes which
+
+allows me to now set up my types by accessing action types and then the constants which we do export
+
+in that file.
+
+I'll do the same for decrement and of course also for add and subtract, like this,
+
+finally also for subtract.
+
+So that's the updated counter.js file with the action creators for the counter related actions,
+
+of course I'll do the same for the result, take my saveResult, storeResult and this deleteResult
+
+creator,
+
+so that also includes the asynchronous one
+
+and then I'll also import everything as action types from this action types file
+
+and with that, we can also use the action types we import to assign the right types here.
+
+So storeResult, in storeResult itself I just have my asynchronous code dispatching saveResult
+
+in the end and then deleteResult, I of course also want to dispatch deleteResult.
+
+So now I got my action creators outsourced, the action types file now only contains my action types and
+
+exports them,
+
+now I also want to have one file exporting all my action creators,
+
+so I'll create an index.js file here and in there, I'll actually use a syntax you might have not
+
+seen before,
+
+I'll just export something from a file.
+
+I can do that so I don't even import it in this file,
+
+I just have one file, the index.js file
+
+which groups
+
+all exports from separate files, so that in the end I can always point to that file to import something
+
+from any of the files I'll point to in that file here. So let me quickly do that, let's export something from the
+
+counter.js file and that something actually will be a list of everything
+
+this file does offer, like add, subtract, increment and decrement.
+
+And this really is just an advanced feature if someone wants to use such a set up of the project to handle
+
+a bigger project with lots and lots of actions and action creators of course,
+
+it's overkill for this demo project but it will make more sense later when we reach our burger builder
+
+and I want to teach you the concept right now already.
+
+So I'll also export something from the result file here that will be storeResult and it will be deleteResult,
+
+saveResult is not exported here though I could of course also export it but I'll never need it
+
+in any other file so I won't include it into my grouping.
+
+Now what this allows me to do is to later just import from index.js and actually import from any of
+
+these two files which I group in this index.js file.
+
+Now that's just a tiny improvement to make our files even a bit leaner, now what I also need to do is I need
+
+to adjust my reducer file where I do import these action types, so in counter.js where I import action
+
+types, that now lives in the actionTypes.js file in the actions folder, the same adjustment needs
+
+to be made in the result reducer,
+
+there I also now import from the action types file in the actions folder. And finally in the counter
+
+where I dispatch, here I refer to action creators and that now actually should point to the index.js
+
+file,
+
+so /index. Let's quickly restart npm start to see if it really has problems or just is stuck in
+
+the rebuild process,
+
+we do find an issue in the counter.js file,
+
+it doesn't like my imports here, action types,
+
+oh because I mistyped here it's actions,
+
+that's a typo in the file name, the file name should be action types.
+
+Now with the file name changed, I need to change all my imports in the other action files too,
+
+there I was referencing the wrong file, with all that adjusted to really point to actiontypes.js,
+
+we should have a working application again just as before with asynchronous storage available.
+
+Now however with a bit more split up action creators over multiple files, as I said for this demo project
+
+overkill but definitely something you should keep in mind for bigger projects because what it allows
+
+you is that you have files with only a few action creators in each file which makes it easier to find
+
+that action creator you want it to change or check.
+
+So this is why I chose that setup and it is something I wanted to show you for your bigger projects.
+
+### 9. Where to Put Data Transforming Logic? 
+Now we restructured our actions in the last lecture, now I want to dive into what we actually put into the action creators.
+
+It's obviously easy for asynchronous code,the only place where we can execute asynchronous code is in our action creator, it's what redux-thunk is made for and it's the common and best practice pattern if you need to reach out to a server to fetch data from it and thereafter store it in your store,definitely do that with the action creator. 
+
+Send your HTTP request here instead of set timeout and once the answer is there, the response is there, store it in your store, you will see this in action in the course project of course.
+
+However you can of course put much more logic into your action creators, think about saveResult, we save our result there, we get it as an argument and we simply return an action where we pass it on as a payload.
+
+Now this is a very dry action creator,it doesn't do anything else but just return object with the unchanged response,result, excuse me.
+
+Now obviously what we could do is we could create a constant maybe name it updatedResult and set it equal to result times two.
+
+Now obviously, that doesn't make this much sense here but we can theoretically alter anything you want here and you might have transformations which make more sense, maybe we want to update some id, we want to add a user name and we then pass on our updatedResult.
+
+The thing is this happens upon saving the result, keep that in mind, our application still works. If I store that, we stored 20 because we updated the result by multiplying it with two.
+
+Now we have logic in the action creator and this might be valid logic instead of some nonsense operation like this one, the thing is you could of course also execute the same logic so let me revert this to the previous state of just passing on response.
+
+You could execute that same logic if you need to transform the data before storing it in the state which is perfectly fine which might happen.
+
+You can execute that same logic of course in your reducer, here storeResult, here we concatenate the result and store the value and now obviously, nothing is keeping us from multiplying this with two here,
+
+if I do it there in the result reducer,
+
+now if I save 10, we still store 20 in the store as you can see
+
+but now we change it at a totally different place,
+
+we change it in the reducer.
+
+Now as I said, this operation here might not make that much sense but you'll often have cases where you
+
+really want to change something before you store it in the state,
+
+you'll not always get the value you just want to pass on,
+
+where should you then change it? In the reducer
+
+as I show you here, you can of course also run some code before returning here, change data or in the action
+
+creator
+
+like I showed you before, here what I commented out.
+
+Both works, what's better? Let's take a closer look.
+
+In the end, the question comes down to where to put the logic, we have action creators and reducers as options. 
+
+Now action creators as you learned are great for running async code when you dispatch an action, reducers on the other hand only are able to run synchronous code and are pure, input in updated state out. 
+
+Reducers however keep that in mind, are meant to be the place where you update the state, this is one core redux concept. 
+
+Action creators are not core redux concept, a core concept are actions, these javascript objects with a type and a payload. 
+
+So the reducer is the core concept and the whole idea behind redux is that the reducer is the only thing which updates the state, action creators shouldn't prepare the state too much for that reason because it should be the reducer which does the update but there of course is also a difference between updating the state which essentially just means returning a new object which makes up our state and changing the data which goes into the state.
+
+Still you can find arguments for both directions, I lean towards putting the logic into the reducer and not too much logic into the action creator.
+
+Asynchronous code has to go there but once you got back the data from the server you might need to reach out, you can of course transform it in the action creator and you should do that to a certain extent but once you've got data that is relatively clean, you should hand it off to the reducer.
+
+And if you then still need to manipulate it, for example by taking 8 times 2 or anything like that, in my
+
+opinion that should go into the reducer.
+
+Now you will also find arguments for the other side and in the end, it's your decision. If you choose
+
+one approach, stick to it though, don't change it,
+
+don't put a lot of logic in one action creator, just to then have a lot of logic in another reducer.
+
+Be consistent and decide, where do you want to transform and prepare your data, the action creator or reducer, I recommend the latter but ultimately it's up to you, just take a consistent route.
+
+### 9. Using Action Creators and Get State
