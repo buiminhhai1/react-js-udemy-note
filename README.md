@@ -3144,3 +3144,15 @@ don't put a lot of logic in one action creator, just to then have a lot of logic
 Be consistent and decide, where do you want to transform and prepare your data, the action creator or reducer, I recommend the latter but ultimately it's up to you, just take a consistent route.
 
 ### 9. Using Action Creators and Get State
+
+## Section 17: 
+### 1.Introduction
+and learned a couple of other useful things too which I now also want to apply to our course project.
+Obviously we got a whole checkout process
+
+### 2. Install Redux devtools.
+because I want to be able to analyze my store.
+
+navigate away
+this is not per se wrong or anything like that but we can also outsource it to action creators 
+even though for synchronous action creators, it's not really neccessary but it is a consistent 
