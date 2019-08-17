@@ -3149,10 +3149,348 @@ Be consistent and decide, where do you want to transform and prepare your data, 
 ### 1.Introduction
 and learned a couple of other useful things too which I now also want to apply to our course project.
 Obviously we got a whole checkout process
-
+ 
 ### 2. Install Redux devtools.
 because I want to be able to analyze my store.
 
 navigate away
 this is not per se wrong or anything like that but we can also outsource it to action creators 
 even though for synchronous action creators, it's not really neccessary but it is a consistent 
+
+
+
+## Section 18: Adding Authentication to our Burger Project
+### 1. Introduction
+Welcome to this module, you learned so much about react, redux and all the core features of both libraries.
+
+We built an amazing application with all these tools.
+
+But one thing is missing, one thing that is not really related to react necessarily but what you have in a lot of applications, authenticating users.
+
+And I want to show you how this would work in a react single page application, single page application because if you have a multi-page application where you render different pages for different requests from your server, you handle authentication in the traditional way of having a session on the server and returning different pages after checking the validity of the user or the authentication status on the server.
+
+Now the special thing about authentication in react is that you have only one file and thereafter, you get no new file, so you can check the authentication status of the user on the server but not on every request, at least not in the traditional model.
+
+So that is what we'll have a look at, how does this work in react and of course, we'll also implement authentication in our burger project.
+
+### 2. Understanding Authentication in Single Page Applications
+So how does authentication work in single page applications?
+
+We have a server and we have our single page application running in the browser.
+
+Now the single page application sends the authentication data to the server because we probably have a sign up or a sign in page in our SPA and therefore we get data like the e-mail address and the password and we send this to the server to validate it there because such logic obviously always has to happen on the server and this is also where we store our persistent data, in the database on the server and the server doesn't have to be firebase as in our project of course.
+
+This can be any server, any restful API to be precise, this is what we typically communicate with when using single page applications. 
+
+That server then send something back and you could think that's a session but since the server in a SPA world typically is a stateless restful API, we're not getting back a session because the server doesn't care about the different clients connecting to him.
+
+Instead we get back a token, you can think of that token as a javascript object and code it as json, json web tokens are the typical form of tokens you get.
+
+So it's a javascript object in the end you can say and this javascript object now has to be stored on the client, for example in local storage. 
+
+We could also store it in our redux store but there, it will be lost when ever the user refreshes the page.
+
+So we typically use local storage since that persists page refreshes and allows us to fetch that token even if the user did leave and revisit our page, so that we can leave the user are logged in if we want.
+
+And what do we need this token for then?
+
+Well, imagine we're making requests to some protected resource on the server, like for example we tried to change our password or we want to create a new blog post, such requests of course are only allowed to authenticated users and since we don't constantly check the authentication status on the server, we have no session there.
+
+We pass the token along with requests to such protected resources, that token and that's important is created by the server and in a way that the server can verify if it's a valid token created by the server or not.
+
+So that we can't fake such a token on the client, we can't create it there and send to the server, that would not work.
+
+### 3. Required App Adjustments
+We have the burger builder project and there are some things we'll adjust in this module. 
+
+We need to add a new view, the sign up and sign in view, I'll combine it in one view where we can create new users or log users in.
+
+We also want to protect some routes on the frontend, guard them so that for example we can't access the orders route if we're not authenticated.
+
+And additionally, I also want to pass that token we'll receive onto the backend for requests to protect resources so that we can make sure that this does not work.
+
+These are the adjustments we have to make on our frontend and to make them, we first of all will start with the sign up and sign in view because without having users, all the
+other things are kind of hard to do.
+
+### 4. Adding an Auth Form
+So back in our application, this is where we last left it, I'll add a new container. 
+
+I'll add in the containers folder and I'll name it auth,
+
+you can of course name this whatever you want and there, I'll create the auth.js file and this will be this page I want to load with the sign up or sign in form. 
+
+Now in here, I will create a class based component so I'll import react and component from react, it's been a time since we created such a component but I'm sure you still know how it works.
+
+We create it with the class keyword, then the name of the component like auth and we extend this component we're importing.
+
+There we need a render method where we return some jsx and in the end, I'll export this class as the file default.
+
+Now the jsx here will be pretty close to our contact data form, I'll have a wrapping div and in there, I'll add a form element and in this form element I want to use my custom input and button components, just as I use them in the contact data component or container.
+
+I'll also manage my form through the state of this auth container, not through redux because I'm only talking about the local state, the values the user entered into their form inputs and so on and it makes more sense to me to use them and to manage them inside the container with react's state  property.
+
+So I'll add state here and I'll add a controls property and I'll set it up kind of equally to the contact
+
+data so that I can reuse the logic from there,
+
+there we had an orderForm property and then we had the various controls and they all had something like
+
+the element, type, config and so on.
+
+I'm going to copy the name control from there and put it into my auth controls object and rename it from
+
+name to e-mail,
+
+now the element type will still be an input element,
+
+the config here I will create an input element of type e-mail and placeholder should just be mail
+
+address, for example.
+
+Now the value initially is empty,
+
+regarding the rules, I want to reuse the checkValidity method from contact data and there, I support
+
+things like required minLength, maxLength,
+
+isEmail, isNumeric and that is basically what I want to introduce in the auth container too.
+
+So I have required and now I also want to set up isEmail to true for this e-mail control I'm creating here,
+
+valid initially should be false and touched is also false.
+
+And now, I will duplicate this once to also have a password field
+
+so here I'll add password like this, it will also be of type input
+
+but then, the element type will be of that, the type of the input itself then will be a password and the placeholder
+
+will therefore be password.
+
+It should be required
+
+and let's say we want to have a minLength of seven characters or six characters
+
+maybe, that actually is the minLength required by firebase, of course adjust this to your backend.
+
+With that we got this set up, we can now dynamically create that form and for that, I first of all
+
+need to import the input and button components
+
+so my own components there. Input from, now I need to move up into the components folder, into the UI folder
+
+then there the input folder with the input file and the same for the button component, like this.
+
+Now the logic is the same as in the contact data component,
+
+there we also looped through all our controls here and I can therefore copy the code from there where
+
+I converted my state object to an array I can loop through, I'll copy that. I'll then move over to the
+
+auth container and add that in the render method before I return anything
+
+and now I want to loop through it and create my form. So I'll create a new constant which I'll name
+
+form and there, I want to take my form elements array called map to map it into an array of jsx elements,
+
+I get each form element here and I will return jsx, I want to return my input,
+
+it's a self-closing element and it takes a lot of keys and properties.
+
+The first one is the key property,
+
+there I really just want to use the form element ID which is available since I add it here.
+
+If you remember the form's module, we added it here, it's the name of the element to be precise
+
+and then, all the other keys which are expected. We can have a look at the contact data and we can actually
+
+copy all the set up from there, for all the other props
+
+we set up on the input element and add it here in the auth container.
+
+So there we can also leave the code as it is
+
+because I kept the name, I'm talking about a form element in my loop and I do use that here too.
+
+I do have a config key and a value key and all these keys because I use the same set up in my state
+
+property so that's really reusable
+
+and with that, we now have a dynamically generated set of inputs.
+
+Now the next thing is of course that I also need a button
+
+so below all these inputs, I'll add a button. That button requires a button type prop which I'll set to
+
+success, danger would be the other option we have in our application and that should not be part of my
+
+form here though, that should be part of my form element down there where I return something and above
+
+the button, I'll render the form content which contains my inputs.
+
+With that, the button should not be a self-closing element but the button should allow me to add some
+
+caption in between the tags,
+
+so here I'll simply say submit and now we got a form with inputs and a button. To see it,
+
+we need to load it via routing, we got the auth container and we set up all our routes in the app.js
+
+file.
+
+So there I want to import my auth container, import auth from ./containers auth and auth again
+
+and now here, I'll simply replicate one of the routes and let's say for /auth, I want to load this
+
+auth component, like that.
+
+Let's try this out and to be able to reach that,
+
+I'll also go into my components folder and there to navigation, navigation items into the navigation
+
+items component,
+
+here we got our links and I will add a new one,
+
+I will add a link to /auth and I'll give it a caption of authenticate, something like that. With that
+
+set up, let's go back to the application, we are on
+
+authenticate, the styling is a bit off though
+
+and if we inspect it, I can't spot my inputs.
+
+So let's head back to the auth container and see where the inputs are at,
+
+we have a form, that should be that form constant
+
+but somehow when looping through the array
+
+here, we seem to not really create inputs.
+
+The reason is because I copied the code from contact data,
+
+I'm referring to an orderForm property in my state but here in the auth container, I renamed this to controls
+
+so I'll just rename it here too
+
+and now if we go back, we see the controls.
+
+Now to also give this some styling, I'll add an auth.css file and I'll copy the styling from the contact
+
+data css file into there, replace the contact data class
+
+here with the auth class and leave all the styling and in the auth.js file, I'll then import
+
+my classes from the ./auth.css file and then I'll assign it to the wrapping div, so that the wrapping
+
+div here receives the class name which is classes.Auth, this newly added css class.
+
+If we now save all these files,
+
+this is looking pretty good on all device sizes, I guess.
+
+So this is my sign up form, the next step is to also configure this form to have validation,
+
+so let's do that in the next step,
+
+I will also copy the code for this from contact data
+
+and by the way with all these code copying, you would correctly say can't we outsource some of this code
+
+in some centralized file and yes we can,
+
+we'll do this in the next module where we will apply some optimizations to this project.
+
+For now, I would just wrap checkValidity, this method,
+
+copy it and add it to my auth container too, so above render, I'll add checkValidity which supports various
+
+rules,
+
+actually all the rules I use here and now I need an inputChangedHandler and I will also get this from
+
+contact data.
+
+So to check the validity, I'll add a new method to my auth container, I'll name it inputChangedHandler
+
+and there, I expect to get the event and the control name which did change
+
+and in there, I now can use a lot of the logic but not all from the contact data.
+
+I want to create an updated form, not named orderForm though where I update my elements but I'll
+
+do it manually here in the auth container. So I'll create my updatedControls constant where I'll create
+
+a new object where I'll copy this.state.controls first and then I want to only update one of the
+
+controls, the control with the control name we have here.
+
+So state controls simply copies all elements inside this control object
+
+and one of them will then be overwritten by me and that's the one with the name I receive as an argument
+
+here and that should then in turn receive a new object.
+
+So here, I will then also call this.state.controls for that given control name and distribute all these
+
+properties so that I can then overwrite some of the properties,
+
+for example the value, now the value of this control and I can basically now overwrite all the properties
+
+we have here on the control, like value and valid and touched.
+
+So the value will now be event.target.value, valid will use this checkValidity method and there I will pass
+
+event.target.value
+
+and the rules of this given control,
+
+so the rules are this.state.controls for this control name,
+
+there we have this validation property which I'll pass,
+
+so that is referring to that validation property each control has where I set up the rules.
+
+So that is now what I pass as a second argument to check validity,
+
+additionally, I'll add another property, touched, it will be set to true here whenever this inputChangedHandler
+
+fires, the user did type something so it's definitely touched.
+
+So with that, I update my individual control which was changed,
+
+I update all the relevant fields I want to change.
+
+Now I deliberately won't handle the overall form validity here,
+
+I won't check this,
+
+I won't disable the submit button for invalid forms because I also want to show what happens if we submit
+
+invalid forms,
+
+you can of course implement this too but I won't.
+
+So I'm pretty much done here, what I will have to do is I'll call set state in inputChangedHandler
+
+and set the controls property equal to my updatedControls
+
+now. With that, I got this working, now I need to connect it,
+
+I already did this because I used the same name as in contact data,
+
+so this should work.
+
+Now let's save this and let's see if validation is working then, back in the project if I start typing
+
+here, it stays invalid until it's a valid email address and the password has to be at least 6 characters
+
+long to be treated as valid.
+
+So that's working
+
+and as I said, the button is deliberately never changed.
+
+So my form is finished,
