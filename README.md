@@ -3494,3 +3494,38 @@ So that's working
 and as I said, the button is deliberately never changed.
 
 So my form is finished,
+
+## Section 22: Webpack
+### 1. Introduction Webpack
+What is webpack? 
+Webpack is a bundler but it actually is more than that, a bundler alone would just concatenate files, webpack does that but it also allows you to optimize your files and you hook in various plugins and so-called loaders to also transform you files and for example transpite next generation javascript to current generation javascript.
+
+But in its core, the idea behind webpack is to have multiple JavaScript, css, image, whatever files and bundle them together. 
+
+It analyzes connections between these files like imports and then bundles everything together, allows you optimize it and as I said, allows you to also run some additional logic to transform your code or do whatever you need to do with in. 
+
+This is what webpack does and webpack is the de-facto standard for setting up projects these days. 
+
+That's why we'll also use it in this modules for setting up our own react workflow and project. 
+
+### 2. Hơw does webpack works
+Behind thescenes, webpack has four important things, four important features, it always needs at least one entry point, you can have multile ones. 
+
+This could be our app.js file, our root JavaScript file which mounts our react application to the DOM, which calls react DOM render for example, it needs this file since it then analyzes the dependencies of this file and the root entry file will have a dependency to another file which then in turn has more dependencies, so webpack can build up a dependency graph starting with that root entry file so It can understand which files make up our application if we give it our entry file.
+
+It then analyzes all the dependencies and bundles them together into an output, we specify it like a bundle.js file in a dist folder, we specify the file name and where it should go. 
+
+And there it will put all these dependencies into that file, correctly ordered and in one concatenated outputed file. 
+
+This is the core functionality but as I said it's more than that, in between, there are two other important features we can utilize. 
+
+For one there are so-called loaders, loaders are applied on a per file level so we can for example say all JavaScript files should get handled by loaderX, all css files should get handled by loadedY, babel-loader and css-loader are two popular examples which get used in a lot of projects, so loaders are file dependent or apply file dependent transformations. 
+
+We also then have plugins where loaders are applied on a per file basis, plugs instead take the concatenated files, so he bundle but before it's written to the output. 
+
+Here we can apply some general transformations or optimizations like uglify, so this is on a global level and happens after the loaders did their job. 
+
+This is how webpack works, what it does behind the scenes. 
+
+
+
