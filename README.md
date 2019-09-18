@@ -3528,4 +3528,27 @@ Here we can apply some general transformations or optimizations like uglify, so 
 This is how webpack works, what it does behind the scenes. 
 
 
+## Section 23: NextJS
+### 1. Introduction: 
+Welcome to this module, in this module I'll have a look at nextjs and give you a first short introduction to it. 
 
+NextJs is a library building up on react and you'll still be writing a react application with it, it's not an extra library framework or syntax.
+
+NextJS instead enforces a specific folder structure you have to use and gives you some things like server side rendering out of the box.
+
+Since you use that folder structure, it can manage a lot of things for you so that you don't have to configure them manually and therefore it can making the creation of react ups more convenient especially the server side rendering part. 
+
+Server side rendering is a super interesting part of react what you might not need but which can be helpful if you have an application that is this highly dependent on being found in search engines, for example.
+
+So that's nextjs in a nutshell.
+
+Now let's walk through it step by step in this module and of course keep in mind, it's only an introductory module will not cover all features of nextjs here but the important core concepts.
+
+So let's dive into it.
+
+### 2. Understanding ServerSide rendering
+server side rendering is quite an advanced React concept.
+In a nutshell, server side rendering simply means that when a user enters a URL leading to you React app or one of your pages of your react app, it will pre-render that page on the server so that the server returns that pre-rendered html code.
+
+### 3. Understanding the basics: 
+ 
